@@ -87,3 +87,11 @@
 2024-12-05 17:39:01,170 - IPTester - INFO -   TELECOM: 延迟 175.0ms
 2024-12-05 17:39:01,170 - IPTester - INFO -   UNICOM: 不可用
 2024-12-05 17:39:01,170 - IPTester - INFO -   MOBILE: 延迟 74.0ms
+2024-12-05 20:05:21,345 - IPTester - INFO - Testing IP 1/100: 104.25.174.53
+2024-12-05 20:05:21,345 - IPTester - INFO - Testing IP 104.25.174.53 with TELECOM node 1138
+2024-12-05 20:06:54,920 - IPTester - INFO - Testing IP 1/100: 104.19.133.222
+2024-12-05 20:06:54,921 - IPTester - INFO - Testing IP 104.19.133.222 with TELECOM node 1132
+2024-12-05 20:09:08,248 - IPTester - WARNING - 重试第 1 次测试 IP 104.19.133.222
+2024-12-05 20:11:23,413 - IPTester - WARNING - 重试第 2 次测试 IP 104.19.133.222
+2024-12-05 20:13:38,581 - IPTester - ERROR - 测试 IP 104.19.133.222 出错: HTTPSConnectionPool(host='www.itdog.cn', port=443): Max retries exceeded with url: /batch_ping/ (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x7358addc0ef0>, 'Connection to www.itdog.cn timed out. (connect timeout=None)'))
+2024-12-05 20:13:38,581 - IPTester - INFO - Testing IP 104.19.133.222 with UNICOM node 1266

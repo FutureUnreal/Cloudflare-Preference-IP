@@ -1,6 +1,8 @@
+# main.py
 import json
 import asyncio
 import logging
+import random
 from typing import Dict, List
 from pathlib import Path
 from datetime import datetime
@@ -12,39 +14,99 @@ from src.dns.dnspod import DNSPod
 from src.dns.aliyun import AliDNS
 from src.dns.huawei import HuaweiDNS
 
-def setup_logging():
+def setup_logging(name: str):
+    """设置日志记录"""
     log_dir = Path('logs')
     log_dir.mkdir(exist_ok=True)
     
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler(log_dir / f'main_{datetime.now():%Y%m%d}.log'),
-            logging.StreamHandler()
-        ]
+    # 获取日志记录器
+    logger = logging.getLogger(name)
+    
+    # 如果已经有处理器，说明已经配置过，直接返回
+    if logger.handlers:
+        return logger
+        
+    # 设置日志格式
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    return logging.getLogger('main')
+    
+    # 文件处理器
+    file_handler = logging.FileHandler(
+        log_dir / f'{name}_{datetime.now():%Y%m%d}.log'
+    )
+    file_handler.setFormatter(formatter)
+    
+    # 控制台处理器
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    
+    # 添加处理器
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+    logger.setLevel(logging.INFO)
+    
+    return logger
 
 def load_config(config_path: str = 'config/settings.json') -> Dict:
     with open(config_path) as f:
         return json.load(f)
 
-def load_ip_ranges(ranges_path: str = 'config/ip_ranges.json') -> List[str]:
-    with open(ranges_path) as f:
-        data = json.load(f)
-    
+def generate_ip_list(config: Dict) -> List[str]:
+    """生成要测试的IP列表"""
+    logger = logging.getLogger('main')
     ip_list = []
-    skip_ips = set(data.get('skip_ips', []))
-    
-    for range_info in data['ip_ranges']:
-        prefix = range_info['prefix']
-        for i in range(range_info['start'], range_info['end'] + 1):
-            ip = f"{prefix}.{i}"
-            if ip not in skip_ips:
-                ip_list.append(ip)
-    
-    return ip_list
+
+    try:
+        with open('config/ip_ranges.json') as f:
+            ip_data = json.load(f)
+        
+        ip_ranges = ip_data.get('ip_ranges', [])
+        skip_ips = set(ip_data.get('skip_ips', []))
+        
+        # 生成IP列表
+        for ip_range in ip_ranges:
+            prefix = ip_range.get('prefix', '')
+            start = ip_range.get('start', 2)
+            end = ip_range.get('end', 255)
+            
+            prefix_parts = prefix.split('.')
+            if len(prefix_parts) == 2:  # 例如 "104.27"
+                for third in range(start, end + 1):
+                    for fourth in range(0, 256):
+                        ip = f"{prefix}.{third}.{fourth}"
+                        if ip not in skip_ips:
+                            ip_list.append(ip)
+            elif len(prefix_parts) == 3:  # 例如 "104.27.0"
+                for fourth in range(start, end + 1):
+                    ip = f"{prefix}.{fourth}"
+                    if ip not in skip_ips:
+                        ip_list.append(ip)
+
+        total_ips = len(ip_list)
+        logger.info(f"IP池总数: {total_ips}")
+        
+        # 应用抽样率或指定数量
+        sample_size = None
+        if 'sample_size' in config.get('test_config', {}):
+            # 如果配置了具体数量，直接使用
+            sample_size = config['test_config']['sample_size']
+        elif 'sample_rate' in config.get('test_config', {}):
+            # 如果配置了采样率，计算数量
+            sample_size = max(1, int(total_ips * config['test_config']['sample_rate']))
+        
+        if sample_size:
+            ip_list = random.sample(ip_list, min(sample_size, total_ips))
+            logger.info(f"随机抽取 {len(ip_list)} 个IP进行测试")
+        
+        # 随机打乱顺序
+        random.shuffle(ip_list)
+        
+        return ip_list
+        
+    except Exception as e:
+        logger.error(f"生成IP列表失败: {str(e)}")
+        return []
 
 def init_dns_client(config: Dict):
     dns_config = config['dns']['providers']
@@ -96,73 +158,89 @@ async def update_dns_records(dns_client, config: Dict, best_ips: Dict):
                                 logging.error(f"Failed to update DNS record: {str(e)}")
 
 async def main():
-    logger = setup_logging()
-    logger.info("Starting IP test and DNS update process")
-    
-    try:
-        # 加载配置
-        config = load_config()
-        ip_list = load_ip_ranges()
-        
-        # 初始化组件
-        ip_tester = IPTester(config)
-        evaluator = IPEvaluator(config)
-        recorder = IPRecorder(config)
-        dns_client = init_dns_client(config)
-        analyzer = IPHistoryAnalyzer(config)
+   log_dir = Path('logs')
+   log_dir.mkdir(exist_ok=True)
+   
+   # 配置根日志记录器 
+   logging.basicConfig(
+       level=logging.INFO,
+       format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+       handlers=[
+           logging.FileHandler(log_dir / f'main_{datetime.now():%Y%m%d}.log'),
+           logging.StreamHandler()
+       ]
+   )
+   
+   logger = logging.getLogger('main')
+   logger.info("Starting IP test and DNS update process")
+   
+   try:
+       # 加载配置
+       config = load_config()
+       ip_list = generate_ip_list(config)
+       
+       if not ip_list:
+           logger.error("没有可测试的IP")
+           return
+           
+       ip_tester = IPTester(config)
+       evaluator = IPEvaluator(config)
+       recorder = IPRecorder(config)
+       dns_client = init_dns_client(config)
+       analyzer = IPHistoryAnalyzer(config)
 
-        # 获取当前DNS记录中的IP
-        current_ips = {
-            'TELECOM': [],
-            'UNICOM': [],
-            'MOBILE': [],
-            'OVERSEAS': []
-        }
-        
-        # 遍历域名配置获取当前IP
-        for domain, sub_domains in config['domains'].items():
-            for sub_domain in sub_domains:
-                records = dns_client.get_record(domain, 100, sub_domain, "A")
-                if isinstance(records, dict) and 'records' in records:
-                    for record in records.get('records', []):
-                        line = record.get('line', '')
-                        if line == '移动':
-                            current_ips['MOBILE'].append(record['value'])
-                        elif line == '联通':
-                            current_ips['UNICOM'].append(record['value'])
-                        elif line == '电信':
-                            current_ips['TELECOM'].append(record['value'])
-                        elif line == '境外':
-                            current_ips['OVERSEAS'].append(record['value'])
-        
-        # 测试IP
-        logger.info(f"Testing {len(ip_list)} IPs...")
-        test_results = ip_tester.start(ip_list)
-        
-        # 评估结果
-        logger.info("Evaluating results...")
-        evaluations = evaluator.evaluate_batch(test_results)
-        
-        # 记录结果
-        logger.info("Saving results...")
-        recorder.save_test_results(test_results)
-        
-        # 使用历史分析器选择最佳IP
-        logger.info("Analyzing historical data...")
-        best_ips = await analyzer.analyze_and_update(
-            current_ips=current_ips,
-            new_test_results=evaluations
-        )
+       # 获取当前DNS记录中的IP
+       current_ips = {
+           'TELECOM': [],
+           'UNICOM': [],
+           'MOBILE': [],
+           'OVERSEAS': []
+       }
+       
+       # 遍历域名配置获取当前IP
+       for domain, sub_domains in config['domains'].items():
+           for sub_domain in sub_domains:
+               records = dns_client.get_record(domain, 100, sub_domain, "A")
+               if isinstance(records, dict) and 'records' in records:
+                   for record in records.get('records', []):
+                       line = record.get('line', '')
+                       if line == '移动':
+                           current_ips['MOBILE'].append(record['value'])
+                       elif line == '联通':
+                           current_ips['UNICOM'].append(record['value'])
+                       elif line == '电信':
+                           current_ips['TELECOM'].append(record['value'])
+                       elif line == '境外':
+                           current_ips['OVERSEAS'].append(record['value'])
 
-        # 更新DNS记录
-        logger.info("Updating DNS records...")
-        await update_dns_records(dns_client, config, best_ips)
-        
-        logger.info("Process completed successfully")
-        
-    except Exception as e:
-        logger.error(f"Process failed: {str(e)}")
-        raise
+       # 测试IP
+       logger.info(f"开始测试 {len(ip_list)} 个IP...")
+       test_results = await ip_tester.start(ip_list)
+       
+       # 评估结果
+       logger.info("评估测试结果...")
+       evaluations = evaluator.evaluate_batch(test_results)
+       
+       # 记录结果
+       logger.info("保存测试结果...")
+       recorder.save_test_results(test_results)
+       
+       # 使用历史分析器选择最佳IP
+       logger.info("分析历史数据...")
+       best_ips = await analyzer.analyze_and_update(
+           current_ips=current_ips,
+           new_test_results=evaluations
+       )
+
+       # 更新DNS记录
+       logger.info("更新DNS记录...")
+       await update_dns_records(dns_client, config, best_ips)
+       
+       logger.info("Process completed successfully")
+       
+   except Exception as e:
+       logger.error(f"Process failed: {str(e)}")
+       raise
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -1,10 +1,12 @@
 {
     "test_config": {
       "test_timeout": 5,
+      "test_interval": 1,
       "min_request_interval": 0,
       "retry_delay": 0,
       "nodes_per_test": 1,
       "sample_rate": 0.0002,
+      "sample_size": 100,
       "overseas_mode": true
     },
   
@@ -52,9 +54,9 @@
     },
   
     "domains": {
-      "cdn.ai-unreal.top": {
+      "ai-unreal.top": {
         "@": ["CM", "CU", "CT", "AB"],
-        "www": ["CM", "CU", "CT", "AB"]
+        "cdn": ["CM", "CU", "CT", "AB"]
       }
     },
   
