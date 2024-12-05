@@ -1,0 +1,77 @@
+{
+    "test_config": {
+      "test_timeout": 5,
+      "min_request_interval": 0,
+      "retry_delay": 0,
+      "nodes_per_test": 1,
+      "sample_rate": 0.0002,
+      "overseas_mode": true
+    },
+  
+    "evaluation": {
+      "telecom_latency_threshold": 150,
+      "unicom_latency_threshold": 150,
+      "mobile_latency_threshold": 150,
+      "overseas_latency_threshold": 200,
+      "stability_threshold": 30,
+      "overseas_stability_threshold": 50,
+      "min_success_rate": 0.8,
+      "max_loss_rate": 20,
+      "min_tests_for_bad_ip": 5,
+      "bad_ip_threshold": 0.8
+    },
+  
+    "recorder": {
+      "results_dir": "results",
+      "max_history_days": 30,
+      "save_interval": 10
+    },
+  
+    "dns": {
+      "default_ttl": 600,
+      "max_records_per_line": 2,
+      "providers": {
+        "dnspod": {
+          "enabled": false,
+          "secret_id": "YOUR_SECRET_ID",
+          "secret_key": "YOUR_SECRET_KEY"
+        },
+        "aliyun": {
+          "enabled": true,
+          "access_key_id": "",
+          "access_key_secret": "",
+          "region": "cn-hangzhou"
+        },
+        "huawei": {
+          "enabled": false,
+          "ak": "YOUR_AK",
+          "sk": "YOUR_SK",
+          "region": "cn-east-3"
+        }
+      }
+    },
+  
+    "domains": {
+      "example.com": {
+        "@": ["CM", "CU", "CT", "AB"],
+        "www": ["CM", "CU", "CT", "AB"]
+      }
+    },
+  
+    "regions": [
+      "EAST",
+      "SOUTH",
+      "NORTH",
+      "CENTRAL",
+      "SOUTHWEST",
+      "NORTHWEST",
+      "NORTHEAST"
+    ],
+  
+    "isps": [
+      "CHINA_TELECOM",
+      "CHINA_UNICOM",
+      "CHINA_MOBILE",
+      "OVERSEAS"
+    ]
+  }
