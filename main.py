@@ -7,6 +7,7 @@ from datetime import datetime
 from src.ip_tester import IPTester
 from src.core.evaluator import IPEvaluator
 from src.core.recorder import IPRecorder
+from src.core.analyzer import IPHistoryAnalyzer
 from src.dns.dnspod import DNSPod
 from src.dns.aliyun import AliDNS
 from src.dns.huawei import HuaweiDNS
@@ -108,6 +109,31 @@ async def main():
         evaluator = IPEvaluator(config)
         recorder = IPRecorder(config)
         dns_client = init_dns_client(config)
+        analyzer = IPHistoryAnalyzer(config)
+
+        # 获取当前DNS记录中的IP
+        current_ips = {
+            'TELECOM': [],
+            'UNICOM': [],
+            'MOBILE': [],
+            'OVERSEAS': []
+        }
+        
+        # 遍历域名配置获取当前IP
+        for domain, sub_domains in config['domains'].items():
+            for sub_domain in sub_domains:
+                records = dns_client.get_record(domain, 100, sub_domain, "A")
+                if isinstance(records, dict) and 'records' in records:
+                    for record in records.get('records', []):
+                        line = record.get('line', '')
+                        if line == '移动':
+                            current_ips['MOBILE'].append(record['value'])
+                        elif line == '联通':
+                            current_ips['UNICOM'].append(record['value'])
+                        elif line == '电信':
+                            current_ips['TELECOM'].append(record['value'])
+                        elif line == '境外':
+                            current_ips['OVERSEAS'].append(record['value'])
         
         # 测试IP
         logger.info(f"Testing {len(ip_list)} IPs...")
@@ -121,12 +147,13 @@ async def main():
         logger.info("Saving results...")
         recorder.save_test_results(test_results)
         
-        # 获取最佳IP
-        best_ips = evaluator.get_best_ips(
-            evaluations, 
-            limit=config['dns']['max_records_per_line']
+        # 使用历史分析器选择最佳IP
+        logger.info("Analyzing historical data...")
+        best_ips = await analyzer.analyze_and_update(
+            current_ips=current_ips,
+            new_test_results=evaluations
         )
-        
+
         # 更新DNS记录
         logger.info("Updating DNS records...")
         await update_dns_records(dns_client, config, best_ips)

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 import re
 import json
 import base64
@@ -239,7 +237,9 @@ class IPTester:
            self.logger.error(f"Error saving intermediate results: {str(e)}")
 
    def start(self, ip_list: List[str]) -> List[Dict]:
-    results = asyncio.run(self.test_batch(ip_list))
+    loop = asyncio.get_event_loop()
+    # 改为 run_until_complete 而不是 asyncio.run
+    results = loop.run_until_complete(self.test_batch(ip_list))
     
     # 保存结果到文件
     if results:
