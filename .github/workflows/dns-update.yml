@@ -50,6 +50,8 @@ jobs:
           DNSPOD_KEY: ${{ secrets.DNSPOD_KEY }}
           HUAWEI_AK: ${{ secrets.HUAWEI_AK }}
           HUAWEI_SK: ${{ secrets.HUAWEI_SK }}
+          DOMAIN: ${{ secrets.DOMAIN }}
+          SUBDOMAIN: ${{ secrets.SUBDOMAIN }}
         run: |
           python .github/scripts/update_settings.py
           

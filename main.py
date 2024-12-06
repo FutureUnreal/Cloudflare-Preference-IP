@@ -161,7 +161,6 @@ async def main():
    log_dir = Path('logs')
    log_dir.mkdir(exist_ok=True)
    
-   # 配置根日志记录器 
    logging.basicConfig(
        level=logging.INFO,
        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -175,7 +174,6 @@ async def main():
    logger.info("Starting IP test and DNS update process")
    
    try:
-       # 加载配置
        config = load_config()
        ip_list = generate_ip_list(config)
        
@@ -189,7 +187,6 @@ async def main():
        dns_client = init_dns_client(config)
        analyzer = IPHistoryAnalyzer(config)
 
-       # 获取当前DNS记录中的IP
        current_ips = {
            'TELECOM': [],
            'UNICOM': [],
@@ -197,42 +194,39 @@ async def main():
            'OVERSEAS': []
        }
        
-       # 遍历域名配置获取当前IP
-       for domain, sub_domains in config['domains'].items():
-           for sub_domain in sub_domains:
-               records = dns_client.get_record(domain, 100, sub_domain, "A")
-               if isinstance(records, dict) and 'records' in records:
-                   for record in records.get('records', []):
-                       line = record.get('line', '')
-                       if line == '移动':
-                           current_ips['MOBILE'].append(record['value'])
-                       elif line == '联通':
-                           current_ips['UNICOM'].append(record['value'])
-                       elif line == '电信':
-                           current_ips['TELECOM'].append(record['value'])
-                       elif line == '境外':
-                           current_ips['OVERSEAS'].append(record['value'])
+       # 获取域名配置
+       domain = config['domains']['default']['domain']
+       sub_domain = config['domains']['default']['subdomain']
+       
+       # 获取当前DNS记录
+       records = dns_client.get_record(domain, 100, sub_domain, "A")
+       if isinstance(records, dict) and 'records' in records:
+           for record in records.get('records', []):
+               line = record.get('line', '')
+               if line == '移动':
+                   current_ips['MOBILE'].append(record['value'])
+               elif line == '联通':
+                   current_ips['UNICOM'].append(record['value'])
+               elif line == '电信':
+                   current_ips['TELECOM'].append(record['value'])
+               elif line == '境外':
+                   current_ips['OVERSEAS'].append(record['value'])
 
-       # 测试IP
        logger.info(f"开始测试 {len(ip_list)} 个IP...")
        test_results = await ip_tester.start(ip_list)
        
-       # 评估结果
        logger.info("评估测试结果...")
        evaluations = evaluator.evaluate_batch(test_results)
        
-       # 记录结果
        logger.info("保存测试结果...")
        recorder.save_test_results(test_results)
        
-       # 使用历史分析器选择最佳IP
        logger.info("分析历史数据...")
        best_ips = await analyzer.analyze_and_update(
            current_ips=current_ips,
            new_test_results=evaluations
        )
 
-       # 更新DNS记录
        logger.info("更新DNS记录...")
        await update_dns_records(dns_client, config, best_ips)
        
