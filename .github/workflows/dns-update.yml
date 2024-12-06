@@ -37,7 +37,7 @@ jobs:
           CORE_PATH="$SITE_PACKAGES/aliyunsdkcore"
           
           mkdir -p "$CORE_PATH/vendored/requests/packages/urllib3/packages"
-          curl -o six.py https://github.com/FutureUnreal/Cloudflare-Preference-IP/blob/main/six.py
+          curl -o six.py https://raw.githubusercontent.com/benjaminp/six/1.16.0/six.py
           
           cp six.py "$CORE_PATH/vendored/six.py"
           cp six.py "$CORE_PATH/vendored/requests/packages/urllib3/packages/six.py"
