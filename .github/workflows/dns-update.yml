@@ -30,6 +30,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Fix aliyunsdkcore six.py  # 添加这个步骤
+        run: |
+          SITE_PACKAGES=$(python -c "import site; print(site.getsitepackages()[0])")
+          CORE_PATH="$SITE_PACKAGES/aliyunsdkcore"
+          
+          mkdir -p "$CORE_PATH/vendored/requests/packages/urllib3/packages"
+          curl -o six.py https://github.com/FutureUnreal/Cloudflare-Preference-IP/blob/main/six.py
+          
+          cp six.py "$CORE_PATH/vendored/six.py"
+          cp six.py "$CORE_PATH/vendored/requests/packages/urllib3/packages/six.py"
           
       - name: Update settings.json
         env:
