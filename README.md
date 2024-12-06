@@ -121,8 +121,10 @@ python main.py
   
   {
   "domains": {
-    "$DOMAIN": {            // 从环境变量 DOMAIN 获取
-      "$SUBDOMAIN": ["CM", "CU", "CT", "AB"]   // 从环境变量 SUBDOMAIN 获取
+  "default": {
+    "domain": "",              // 可选，默认从环境变量获取
+    "subdomain": "",           // 可选，默认从环境变量获取
+    "lines": ["CM", "CU", "CT", "AB"]
       }
     }
   }
