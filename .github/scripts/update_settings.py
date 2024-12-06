@@ -21,13 +21,13 @@ def update_settings():
     settings['dns']['providers']['huawei']['sk'] = os.environ.get('HUAWEI_SK', '')
 
     # 更新域名配置
-    domain = os.environ.get('DOMAIN') or settings['domains']['default']['domain']
-    subdomain = os.environ.get('SUBDOMAIN') or settings['domains']['default']['subdomain']
-
+    domain = os.environ.get('DOMAIN', '')
+    subdomain = os.environ.get('SUBDOMAIN', '')
+    
     if domain:
-        settings['domains'] = {domain: {"@": settings['domains']['default']['lines']}}
-        if subdomain:
-            settings['domains'][domain][subdomain] = settings['domains']['default']['lines']
+        settings['domains']['default']['domain'] = domain
+    if subdomain:
+        settings['domains']['default']['subdomain'] = subdomain
     
     # 保存更新后的配置
     with open(config_path, 'w') as f:
