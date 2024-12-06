@@ -19,6 +19,14 @@ def update_settings():
     # 添加华为云配置
     settings['dns']['providers']['huawei']['ak'] = os.environ.get('HUAWEI_AK', '')
     settings['dns']['providers']['huawei']['sk'] = os.environ.get('HUAWEI_SK', '')
+
+    # 更新域名配置
+    domain = os.environ.get('DOMAIN', '')
+    subdomain = os.environ.get('SUBDOMAIN', '')
+    if domain:
+        settings['domains'] = {domain: {"@": settings['domains']['$DOMAIN']['$SUBDOMAIN']}}
+        if subdomain:
+            settings['domains'][domain][subdomain] = settings['domains']['$DOMAIN']['$SUBDOMAIN']
     
     # 保存更新后的配置
     with open(config_path, 'w') as f:
