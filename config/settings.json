@@ -54,8 +54,10 @@
     },
   
     "domains": {
-      "$DOMAIN": {
-        "$SUBDOMAIN": ["CM", "CU", "CT", "AB"]
+      "default": {
+        "domain": "",
+        "subdomain": "",
+        "lines": ["CM", "CU", "CT", "AB"]
       }
     },
   
