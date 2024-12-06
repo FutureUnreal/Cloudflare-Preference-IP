@@ -35,6 +35,10 @@ jobs:
         env:
           ALIYUN_KEY: ${{ secrets.ALIYUN_KEY }}
           ALIYUN_SECRET: ${{ secrets.ALIYUN_SECRET }}
+          DNSPOD_ID: ${{ secrets.DNSPOD_ID }}
+          DNSPOD_KEY: ${{ secrets.DNSPOD_KEY }}
+          HUAWEI_AK: ${{ secrets.HUAWEI_AK }}
+          HUAWEI_SK: ${{ secrets.HUAWEI_SK }}
         run: |
           python .github/scripts/update_settings.py
           

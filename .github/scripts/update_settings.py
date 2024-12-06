@@ -8,9 +8,17 @@ def update_settings():
     with open(config_path) as f:
         settings = json.load(f)
     
-    # 更新凭证
+    # 阿里云配置
     settings['dns']['providers']['aliyun']['access_key_id'] = os.environ.get('ALIYUN_KEY', '')
     settings['dns']['providers']['aliyun']['access_key_secret'] = os.environ.get('ALIYUN_SECRET', '')
+    
+    # 添加 DNSPod 配置
+    settings['dns']['providers']['dnspod']['secret_id'] = os.environ.get('DNSPOD_ID', '')
+    settings['dns']['providers']['dnspod']['secret_key'] = os.environ.get('DNSPOD_KEY', '')
+    
+    # 添加华为云配置
+    settings['dns']['providers']['huawei']['ak'] = os.environ.get('HUAWEI_AK', '')
+    settings['dns']['providers']['huawei']['sk'] = os.environ.get('HUAWEI_SK', '')
     
     # 保存更新后的配置
     with open(config_path, 'w') as f:
