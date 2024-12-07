@@ -1946,3 +1946,97 @@ KeyError: 'dns'
 2024-12-07 23:11:23,734 - IPHistoryAnalyzer - INFO -   分析天数: 7
 2024-12-07 23:11:23,734 - IPHistoryAnalyzer - INFO -   最小样本数: 5
 2024-12-07 23:11:23,734 - IPHistoryAnalyzer - INFO - 加载了 6 个IP的历史记录
+2024-12-07 23:16:41,566 - IPHistoryAnalyzer - INFO - 开始分析IP...
+2024-12-07 23:16:41,566 - IPHistoryAnalyzer - INFO - 历史记录中的IP数量: 8
+2024-12-07 23:16:41,566 - IPHistoryAnalyzer - INFO - 
+处理 TELECOM 线路...
+2024-12-07 23:16:41,566 - IPHistoryAnalyzer - INFO - TELECOM 当前使用的IP列表: ['104.16.183.244', '104.18.74.47']
+2024-12-07 23:16:41,567 - IPHistoryAnalyzer - INFO - 计算IP 104.16.183.244 的历史得分
+2024-12-07 23:16:41,567 - IPHistoryAnalyzer - INFO - IP 104.16.183.244 TELECOM 线路得分计算:
+2024-12-07 23:16:41,567 - IPHistoryAnalyzer - INFO -   延迟: 151.0ms
+2024-12-07 23:16:41,567 - IPHistoryAnalyzer - INFO -   延迟得分: 6.622516556291391
+2024-12-07 23:16:41,567 - IPHistoryAnalyzer - INFO -   稳定性加分: 10
+2024-12-07 23:16:41,568 - IPHistoryAnalyzer - INFO -   最终得分: 16.62251655629139
+2024-12-07 23:16:41,568 - IPHistoryAnalyzer - INFO - IP 104.16.183.244 的历史得分: 16.62251655629139
+2024-12-07 23:16:41,568 - IPHistoryAnalyzer - INFO - 计算IP 104.18.74.47 的历史得分
+2024-12-07 23:16:41,569 - IPHistoryAnalyzer - INFO - IP 104.18.74.47 TELECOM 线路得分计算:
+2024-12-07 23:16:41,569 - IPHistoryAnalyzer - INFO -   延迟: 142.0ms
+2024-12-07 23:16:41,569 - IPHistoryAnalyzer - INFO -   延迟得分: 7.042253521126761
+2024-12-07 23:16:41,569 - IPHistoryAnalyzer - INFO -   稳定性加分: 10
+2024-12-07 23:16:41,570 - IPHistoryAnalyzer - INFO -   最终得分: 17.04225352112676
+2024-12-07 23:16:41,570 - IPHistoryAnalyzer - INFO - IP 104.18.74.47 的历史得分: 17.04225352112676
+2024-12-07 23:16:41,570 - IPHistoryAnalyzer - INFO - TELECOM 当前IP得分汇总: {'104.16.183.244': 16.62251655629139, '104.18.74.47': 17.04225352112676}
+2024-12-07 23:16:41,570 - IPHistoryAnalyzer - INFO - 新测试 IP 172.67.239.88 得分: 6.451612903225806 (延迟: 155.0ms)
+2024-12-07 23:16:41,570 - IPHistoryAnalyzer - INFO - TELECOM 新测试IP得分汇总: {'172.67.239.88': 6.451612903225806}
+2024-12-07 23:16:41,571 - IPHistoryAnalyzer - INFO - TELECOM 最终选择的IP: ['104.18.74.47', '104.16.183.244']
+2024-12-07 23:16:41,571 - IPHistoryAnalyzer - INFO - 
+处理 UNICOM 线路...
+2024-12-07 23:16:41,571 - IPHistoryAnalyzer - INFO - UNICOM 当前使用的IP列表: ['104.16.183.244', '104.18.74.47']
+2024-12-07 23:16:41,571 - IPHistoryAnalyzer - INFO - 计算IP 104.16.183.244 的历史得分
+2024-12-07 23:16:41,571 - IPHistoryAnalyzer - INFO - IP 104.16.183.244 UNICOM 线路得分计算:
+2024-12-07 23:16:41,572 - IPHistoryAnalyzer - INFO -   延迟: 164.0ms
+2024-12-07 23:16:41,572 - IPHistoryAnalyzer - INFO -   延迟得分: 6.097560975609756
+2024-12-07 23:16:41,572 - IPHistoryAnalyzer - INFO -   稳定性加分: 10
+2024-12-07 23:16:41,572 - IPHistoryAnalyzer - INFO -   最终得分: 16.097560975609756
+2024-12-07 23:16:41,572 - IPHistoryAnalyzer - INFO - IP 104.16.183.244 的历史得分: 16.097560975609756
+2024-12-07 23:16:41,573 - IPHistoryAnalyzer - INFO - 计算IP 104.18.74.47 的历史得分
+2024-12-07 23:16:41,573 - IPHistoryAnalyzer - INFO - IP 104.18.74.47 UNICOM 线路得分计算:
+2024-12-07 23:16:41,574 - IPHistoryAnalyzer - INFO -   延迟: 147.0ms
+2024-12-07 23:16:41,574 - IPHistoryAnalyzer - INFO -   延迟得分: 6.802721088435374
+2024-12-07 23:16:41,574 - IPHistoryAnalyzer - INFO -   稳定性加分: 10
+2024-12-07 23:16:41,574 - IPHistoryAnalyzer - INFO -   最终得分: 16.802721088435373
+2024-12-07 23:16:41,574 - IPHistoryAnalyzer - INFO - IP 104.18.74.47 的历史得分: 16.802721088435373
+2024-12-07 23:16:41,575 - IPHistoryAnalyzer - INFO - UNICOM 当前IP得分汇总: {'104.16.183.244': 16.097560975609756, '104.18.74.47': 16.802721088435373}
+2024-12-07 23:16:41,575 - IPHistoryAnalyzer - INFO - 新测试 IP 172.67.239.88 得分: 5.524861878453039 (延迟: 181.0ms)
+2024-12-07 23:16:41,575 - IPHistoryAnalyzer - INFO - UNICOM 新测试IP得分汇总: {'172.67.239.88': 5.524861878453039}
+2024-12-07 23:16:41,575 - IPHistoryAnalyzer - INFO - UNICOM 最终选择的IP: ['104.18.74.47', '104.16.183.244']
+2024-12-07 23:16:41,575 - IPHistoryAnalyzer - INFO - 
+处理 MOBILE 线路...
+2024-12-07 23:16:41,576 - IPHistoryAnalyzer - INFO - MOBILE 当前使用的IP列表: ['104.16.183.244', '104.18.74.47']
+2024-12-07 23:16:41,576 - IPHistoryAnalyzer - INFO - 计算IP 104.16.183.244 的历史得分
+2024-12-07 23:16:41,576 - IPHistoryAnalyzer - INFO - IP 104.16.183.244 MOBILE 线路得分计算:
+2024-12-07 23:16:41,576 - IPHistoryAnalyzer - INFO -   延迟: 176.0ms
+2024-12-07 23:16:41,576 - IPHistoryAnalyzer - INFO -   延迟得分: 5.681818181818182
+2024-12-07 23:16:41,577 - IPHistoryAnalyzer - INFO -   稳定性加分: 10
+2024-12-07 23:16:41,577 - IPHistoryAnalyzer - INFO -   最终得分: 15.681818181818182
+2024-12-07 23:16:41,577 - IPHistoryAnalyzer - INFO - IP 104.16.183.244 的历史得分: 15.681818181818182
+2024-12-07 23:16:41,577 - IPHistoryAnalyzer - INFO - 计算IP 104.18.74.47 的历史得分
+2024-12-07 23:16:41,578 - IPHistoryAnalyzer - INFO - IP 104.18.74.47 MOBILE 线路得分计算:
+2024-12-07 23:16:41,578 - IPHistoryAnalyzer - INFO -   延迟: 162.0ms
+2024-12-07 23:16:41,578 - IPHistoryAnalyzer - INFO -   延迟得分: 6.172839506172839
+2024-12-07 23:16:41,579 - IPHistoryAnalyzer - INFO -   稳定性加分: 10
+2024-12-07 23:16:41,579 - IPHistoryAnalyzer - INFO -   最终得分: 16.17283950617284
+2024-12-07 23:16:41,579 - IPHistoryAnalyzer - INFO - IP 104.18.74.47 的历史得分: 16.17283950617284
+2024-12-07 23:16:41,579 - IPHistoryAnalyzer - INFO - MOBILE 当前IP得分汇总: {'104.16.183.244': 15.681818181818182, '104.18.74.47': 16.17283950617284}
+2024-12-07 23:16:41,580 - IPHistoryAnalyzer - INFO - 新测试 IP 172.67.239.88 得分: 5.747126436781609 (延迟: 174.0ms)
+2024-12-07 23:16:41,580 - IPHistoryAnalyzer - INFO - MOBILE 新测试IP得分汇总: {'172.67.239.88': 5.747126436781609}
+2024-12-07 23:16:41,581 - IPHistoryAnalyzer - INFO - MOBILE 最终选择的IP: ['104.18.74.47', '104.16.183.244']
+2024-12-07 23:16:41,581 - IPHistoryAnalyzer - INFO - 
+处理 OVERSEAS 线路...
+2024-12-07 23:16:41,581 - IPHistoryAnalyzer - INFO - OVERSEAS 当前使用的IP列表: ['104.19.156.61']
+2024-12-07 23:16:41,582 - IPHistoryAnalyzer - INFO - 计算IP 104.19.156.61 的历史得分
+2024-12-07 23:16:41,582 - IPHistoryAnalyzer - INFO - IP 104.19.156.61 OVERSEAS 线路得分计算:
+2024-12-07 23:16:41,583 - IPHistoryAnalyzer - INFO -   延迟: 166.0ms
+2024-12-07 23:16:41,584 - IPHistoryAnalyzer - INFO -   延迟得分: 6.024096385542169
+2024-12-07 23:16:41,584 - IPHistoryAnalyzer - INFO -   稳定性加分: 10
+2024-12-07 23:16:41,585 - IPHistoryAnalyzer - INFO -   最终得分: 16.02409638554217
+2024-12-07 23:16:41,585 - IPHistoryAnalyzer - INFO - IP 104.19.156.61 的历史得分: 16.02409638554217
+2024-12-07 23:16:41,585 - IPHistoryAnalyzer - INFO - OVERSEAS 当前IP得分汇总: {'104.19.156.61': 16.02409638554217}
+2024-12-07 23:16:41,586 - IPHistoryAnalyzer - INFO - 新测试 IP 172.67.239.88 得分: 4.3478260869565215 (延迟: 230.0ms)
+2024-12-07 23:16:41,586 - IPHistoryAnalyzer - INFO - OVERSEAS 新测试IP得分汇总: {'172.67.239.88': 4.3478260869565215}
+2024-12-07 23:16:41,586 - IPHistoryAnalyzer - INFO - OVERSEAS 最终选择的IP: ['104.19.156.61', '172.67.239.88']
+2024-12-07 23:16:41,587 - IPHistoryAnalyzer - INFO - 
+处理 DEFAULT 线路...
+2024-12-07 23:16:41,587 - IPHistoryAnalyzer - INFO - DEFAULT 当前使用的IP列表: ['104.18.74.47']
+2024-12-07 23:16:41,588 - IPHistoryAnalyzer - INFO - 计算IP 104.18.74.47 的历史得分
+2024-12-07 23:16:41,588 - IPHistoryAnalyzer - INFO - IP 104.18.74.47 DEFAULT 线路得分计算:
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO -   延迟: 152.75ms
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO -   延迟得分: 6.546644844517185
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO -   稳定性加分: 10
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO -   最终得分: 16.546644844517186
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO - IP 104.18.74.47 的历史得分: 16.546644844517186
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO - DEFAULT 当前IP得分汇总: {'104.18.74.47': 16.546644844517186}
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO - 新测试 IP 172.67.239.88 得分: 5.405405405405405 (延迟: 185.0ms)
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO - DEFAULT 新测试IP得分汇总: {'172.67.239.88': 5.405405405405405}
+2024-12-07 23:16:41,589 - IPHistoryAnalyzer - INFO - DEFAULT 最终选择的IP: ['104.18.74.47', '172.67.239.88']
+2024-12-07 23:16:41,590 - IPHistoryAnalyzer - INFO - IP分析完成，最终选择: {'TELECOM': ['104.18.74.47', '104.16.183.244'], 'UNICOM': ['104.18.74.47', '104.16.183.244'], 'MOBILE': ['104.18.74.47', '104.16.183.244'], 'OVERSEAS': ['104.19.156.61', '172.67.239.88'], 'DEFAULT': ['104.18.74.47', '172.67.239.88']}

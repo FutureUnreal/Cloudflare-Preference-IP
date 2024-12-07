@@ -1435,3 +1435,66 @@
 2024-12-07 23:10:35,065 - IPEvaluator - INFO - DEFAULT 评估结果: 2 个IP
 2024-12-07 23:10:35,065 - IPEvaluator - INFO -   IP: 104.16.183.244, 延迟: 162.5ms
 2024-12-07 23:10:35,065 - IPEvaluator - INFO -   IP: 104.18.74.47, 延迟: 152.75ms
+2024-12-07 23:16:41,554 - IPEvaluator - INFO - 
+评估IP 172.67.239.88:
+2024-12-07 23:16:41,554 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "172.67.239.88",
+  "status": "ok",
+  "tests": {
+    "TELECOM": {
+      "latency": 155.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1132"
+    },
+    "UNICOM": {
+      "latency": 181.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1276"
+    },
+    "MOBILE": {
+      "latency": 174.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1249"
+    },
+    "OVERSEAS": {
+      "latency": 230.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1340"
+    }
+  }
+}
+2024-12-07 23:16:41,556 - IPEvaluator - INFO - TELECOM 测试结果: {'latency': 155.0, 'loss': 0, 'available': True, 'node_id': '1132'}
+2024-12-07 23:16:41,556 - IPEvaluator - INFO - TELECOM: 延迟=155.0ms, 阈值=300ms
+2024-12-07 23:16:41,556 - IPEvaluator - INFO - 添加到 TELECOM 评估结果
+2024-12-07 23:16:41,556 - IPEvaluator - INFO - UNICOM 测试结果: {'latency': 181.0, 'loss': 0, 'available': True, 'node_id': '1276'}
+2024-12-07 23:16:41,556 - IPEvaluator - INFO - UNICOM: 延迟=181.0ms, 阈值=300ms
+2024-12-07 23:16:41,557 - IPEvaluator - INFO - 添加到 UNICOM 评估结果
+2024-12-07 23:16:41,557 - IPEvaluator - INFO - MOBILE 测试结果: {'latency': 174.0, 'loss': 0, 'available': True, 'node_id': '1249'}
+2024-12-07 23:16:41,558 - IPEvaluator - INFO - MOBILE: 延迟=174.0ms, 阈值=300ms
+2024-12-07 23:16:41,558 - IPEvaluator - INFO - 添加到 MOBILE 评估结果
+2024-12-07 23:16:41,558 - IPEvaluator - INFO - OVERSEAS 测试结果: {'latency': 230.0, 'loss': 0, 'available': True, 'node_id': '1340'}
+2024-12-07 23:16:41,558 - IPEvaluator - INFO - OVERSEAS: 延迟=230.0ms, 阈值=400ms
+2024-12-07 23:16:41,558 - IPEvaluator - INFO - 添加到 OVERSEAS 评估结果
+2024-12-07 23:16:41,558 - IPEvaluator - INFO - DEFAULT 线路评估: 平均延迟=185.0ms, 阈值=450ms
+2024-12-07 23:16:41,558 - IPEvaluator - INFO - 添加到 DEFAULT 评估结果
+2024-12-07 23:16:41,558 - IPEvaluator - INFO - 
+评估IP 172.64.216.66:
+2024-12-07 23:16:41,559 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "172.64.216.66",
+  "status": "ok",
+  "tests": {}
+}
+2024-12-07 23:16:41,559 - IPEvaluator - INFO - TELECOM 评估结果: 1 个IP
+2024-12-07 23:16:41,559 - IPEvaluator - INFO -   IP: 172.67.239.88, 延迟: 155.0ms
+2024-12-07 23:16:41,559 - IPEvaluator - INFO - UNICOM 评估结果: 1 个IP
+2024-12-07 23:16:41,559 - IPEvaluator - INFO -   IP: 172.67.239.88, 延迟: 181.0ms
+2024-12-07 23:16:41,559 - IPEvaluator - INFO - MOBILE 评估结果: 1 个IP
+2024-12-07 23:16:41,559 - IPEvaluator - INFO -   IP: 172.67.239.88, 延迟: 174.0ms
+2024-12-07 23:16:41,559 - IPEvaluator - INFO - OVERSEAS 评估结果: 1 个IP
+2024-12-07 23:16:41,560 - IPEvaluator - INFO -   IP: 172.67.239.88, 延迟: 230.0ms
+2024-12-07 23:16:41,560 - IPEvaluator - INFO - DEFAULT 评估结果: 1 个IP
+2024-12-07 23:16:41,560 - IPEvaluator - INFO -   IP: 172.67.239.88, 延迟: 185.0ms
