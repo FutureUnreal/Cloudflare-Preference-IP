@@ -1,5 +1,6 @@
 import logging
 import statistics
+import json
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Union, Optional
@@ -10,11 +11,13 @@ class IPEvaluator:
         self.setup_logging()
         
         # 评估阈值配置
+        eval_config = config['evaluation']  # 先获取 evaluation 配置
         self.latency_thresholds = {
-            'TELECOM': config.get('telecom_latency_threshold', 150),
-            'UNICOM': config.get('unicom_latency_threshold', 150),
-            'MOBILE': config.get('mobile_latency_threshold', 150),
-            'OVERSEAS': config.get('overseas_latency_threshold', 200)
+            'TELECOM': eval_config.get('telecom_latency_threshold', 150),
+            'UNICOM': eval_config.get('unicom_latency_threshold', 150),
+            'MOBILE': eval_config.get('mobile_latency_threshold', 150),
+            'OVERSEAS': eval_config.get('overseas_latency_threshold', 200),
+            'DEFAULT': eval_config.get('default_latency_threshold', 450)
         }
         
         self.stability_thresholds = {
@@ -144,59 +147,78 @@ class IPEvaluator:
             return 0
 
     def evaluate_batch(self, test_results: List[Dict]) -> Dict[str, List[Dict]]:
-        """评估一批IP测试结果并动态分组"""
-        try:
-            evaluations = {
-                'TELECOM': [],
-                'UNICOM': [],
-                'MOBILE': [],
-                'OVERSEAS': []
-            }
+        evaluations = {
+            'TELECOM': [],
+            'UNICOM': [],
+            'MOBILE': [],
+            'OVERSEAS': [],
+            'DEFAULT': []
+        }
+        
+        for result in test_results:
+            ip = result['ip']
+            self.logger.info(f"\n评估IP {ip}:")
             
-            for result in test_results:
-                if result['status'] != 'ok':
-                    continue
+            # 先打印完整的测试结果
+            self.logger.info(f"测试结果详情: {json.dumps(result, indent=2, ensure_ascii=False)}")
+            
+            # 检查tests字段
+            if 'tests' not in result:
+                self.logger.warning(f"IP {ip} 没有tests字段")
+                continue
                 
-                ip = result['ip']
-                score = self.calculate_score(result)
+            # 遍历所有测试结果
+            for isp, test in result['tests'].items():
+                self.logger.info(f"{isp} 测试结果: {test}")
                 
-                # 动态判断是否为境外 IP
-                if self.is_overseas_ip(result):
-                    if 'OVERSEAS' in result['tests']:
-                        overseas_result = result['tests']['OVERSEAS']
-                        if (overseas_result.get('available', False) and 
-                            overseas_result.get('latency', float('inf')) < self.latency_thresholds['OVERSEAS']):
-                            evaluations['OVERSEAS'].append({
-                                'ip': ip,
-                                'score': score,
-                                'latency': overseas_result['latency'],
-                                'loss': overseas_result.get('loss', 0),
-                                'node_id': overseas_result.get('node_id')
-                            })
+                if test.get('available', False):
+                    latency = test.get('latency', float('inf'))
+                    threshold = self.latency_thresholds.get(isp, float('inf'))
+                    self.logger.info(f"{isp}: 延迟={latency}ms, 阈值={threshold}ms")
+                    
+                    # 如果延迟小于阈值，添加到评估结果
+                    if latency < threshold:
+                        evaluations[isp].append({
+                            'ip': ip,
+                            'score': self.calculate_latency_score(latency, threshold),
+                            'latency': latency,
+                            'loss': test.get('loss', 0),
+                            'node_id': test.get('node_id')
+                        })
+                        self.logger.info(f"添加到 {isp} 评估结果")
                 else:
-                    # 处理国内 IP
-                    for isp in ['TELECOM', 'UNICOM', 'MOBILE']:
-                        if isp in result['tests']:
-                            isp_result = result['tests'][isp]
-                            if (isp_result.get('available', False) and 
-                                isp_result.get('latency', float('inf')) < self.latency_thresholds[isp]):
-                                evaluations[isp].append({
-                                    'ip': ip,
-                                    'score': score,
-                                    'latency': isp_result['latency'],
-                                    'loss': isp_result.get('loss', 0),
-                                    'node_id': isp_result.get('node_id')
-                                })
+                    self.logger.info(f"{isp}: 测试不可用")
+
+            # 计算默认线路的评估
+            available_tests = [
+                test for isp, test in result['tests'].items() 
+                if test.get('available', False) and isp in ['TELECOM', 'UNICOM', 'MOBILE', 'OVERSEAS']
+            ]
             
-            # 对每个运营商的结果按得分排序
-            for isp in evaluations:
-                evaluations[isp].sort(key=lambda x: (-x['score'], x['latency']))
-            
-            return evaluations
-            
-        except Exception as e:
-            self.logger.error(f"Error evaluating batch results: {str(e)}")
-            return {}
+            if available_tests:
+                avg_latency = statistics.mean(
+                    test['latency'] for test in available_tests
+                )
+                threshold = self.config['evaluation']['default_latency_threshold']
+                self.logger.info(f"DEFAULT 线路评估: 平均延迟={avg_latency}ms, 阈值={threshold}ms")
+                
+                if avg_latency < threshold:
+                    evaluations['DEFAULT'].append({
+                        'ip': ip,
+                        'score': self.calculate_latency_score(avg_latency, threshold),
+                        'latency': avg_latency,
+                        'loss': statistics.mean(test.get('loss', 0) for test in available_tests),
+                        'tests_count': len(available_tests)
+                    })
+                    self.logger.info("添加到 DEFAULT 评估结果")
+        
+        # 打印最终评估结果
+        for isp, results in evaluations.items():
+            self.logger.info(f"{isp} 评估结果: {len(results)} 个IP")
+            for ip_info in results:
+                self.logger.info(f"  IP: {ip_info['ip']}, 延迟: {ip_info['latency']}ms")
+        
+        return evaluations
 
     def is_qualified(self, test_result: Dict) -> bool:
         """判断IP是否达到质量标准"""

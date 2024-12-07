@@ -1,4 +1,5 @@
 import json
+import logging
 from aliyunsdkcore import client
 from aliyunsdkalidns.request.v20150109 import (
     DescribeDomainRecordsRequest,
@@ -7,8 +8,12 @@ from aliyunsdkalidns.request.v20150109 import (
     AddDomainRecordRequest
 )
 
+# 设置日志
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('AliDNS')
+
 class AliDNS:
-    def __init__(self, access_key_id: str, access_key_secret: str, region: str = 'cn-hongkong'):
+    def __init__(self, access_key_id: str, access_key_secret: str, region: str = 'cn-hangzhou'):
         self.access_key_id = access_key_id
         self.access_key_secret = access_key_secret
         self.region = region
@@ -17,6 +22,7 @@ class AliDNS:
 
     def get_record(self, domain: str, length: int, sub_domain: str, record_type: str) -> dict:
         request = DescribeDomainRecordsRequest.DescribeDomainRecordsRequest()
+        logger.info(f"查询记录参数: domain={domain}, length={length}, sub_domain={sub_domain}, record_type={record_type}")
         request.set_DomainName(domain)
         request.set_PageSize(length)
         request.set_RRKeyWord(sub_domain)
@@ -39,6 +45,8 @@ class AliDNS:
 
     def create_record(self, domain: str, sub_domain: str, value: str, 
                      record_type: str = "A", line: str = "默认", ttl: int = 600) -> dict:
+        logger.info(f"创建记录参数: domain={domain}, sub_domain={sub_domain}, value={value}, type={record_type}, line={line}, ttl={ttl}")
+        
         request = AddDomainRecordRequest.AddDomainRecordRequest()
         request.set_DomainName(domain)
         request.set_RR(sub_domain)
@@ -54,8 +62,20 @@ class AliDNS:
             "境外": "oversea",
             "默认": "default"
         }
-        request.set_Line(line_map.get(line, line))
+        mapped_line = line_map.get(line, line)
+        request.set_Line(mapped_line)
         request.set_accept_format(self._format)
+        
+        # 打印完整请求参数
+        request_params = {
+            'DomainName': domain,
+            'RR': sub_domain,
+            'Type': record_type,
+            'Value': value,
+            'Line': mapped_line,
+            'TTL': ttl
+        }
+        logger.info(f"完整请求参数: {json.dumps(request_params, ensure_ascii=False)}")
         
         result = self.client.do_action(request).decode('utf-8')
         return json.loads(result)
