@@ -668,3 +668,204 @@ MOBILE 评估结果:
 OVERSEAS 评估结果:
 2024-12-08 22:07:11,738 - IPEvaluator - INFO - 
 DEFAULT 评估结果:
+2024-12-08 22:18:41,124 - IPEvaluator - INFO - 
+评估IP 104.27.39.247:
+2024-12-08 22:18:41,125 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 22:18:41,125 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 22:18:41,125 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 22:18:41,125 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 22:18:41,125 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 22:23:18,891 - IPEvaluator - INFO - 
+评估IP 172.67.16.91:
+2024-12-08 22:23:18,891 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 22:23:18,892 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 22:23:18,892 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 22:23:18,892 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 22:23:18,892 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 22:28:19,332 - IPEvaluator - INFO - 
+评估IP 104.17.67.49:
+2024-12-08 22:28:19,332 - IPEvaluator - INFO - 
+检查 TELECOM 线路测试结果:
+2024-12-08 22:28:19,333 - IPEvaluator - INFO - 测试数据: {'latency': 178.0, 'loss': 0, 'available': True, 'node_id': '1138'}
+2024-12-08 22:28:19,333 - IPEvaluator - INFO - TELECOM 延迟: 178.0ms (阈值: 100ms)
+2024-12-08 22:28:19,333 - IPEvaluator - INFO - TELECOM 延迟超出阈值 (178.0ms > 100ms)，未通过评估
+2024-12-08 22:28:19,333 - IPEvaluator - INFO - 
+检查 UNICOM 线路测试结果:
+2024-12-08 22:28:19,333 - IPEvaluator - INFO - 测试数据: {'latency': 130.0, 'loss': 0, 'available': True, 'node_id': '1254'}
+2024-12-08 22:28:19,334 - IPEvaluator - INFO - UNICOM 延迟: 130.0ms (阈值: 100ms)
+2024-12-08 22:28:19,334 - IPEvaluator - INFO - UNICOM 延迟超出阈值 (130.0ms > 100ms)，未通过评估
+2024-12-08 22:28:19,334 - IPEvaluator - INFO - 
+检查 MOBILE 线路测试结果:
+2024-12-08 22:28:19,334 - IPEvaluator - INFO - 测试数据: {'latency': 185.0, 'loss': 0, 'available': True, 'node_id': '1250'}
+2024-12-08 22:28:19,334 - IPEvaluator - INFO - MOBILE 延迟: 185.0ms (阈值: 100ms)
+2024-12-08 22:28:19,335 - IPEvaluator - INFO - MOBILE 延迟超出阈值 (185.0ms > 100ms)，未通过评估
+2024-12-08 22:28:19,335 - IPEvaluator - INFO - 
+检查 OVERSEAS 线路测试结果:
+2024-12-08 22:28:19,335 - IPEvaluator - INFO - 测试数据: {'latency': 160.0, 'loss': 0, 'available': True, 'node_id': '1345'}
+2024-12-08 22:28:19,335 - IPEvaluator - INFO - OVERSEAS 延迟: 160.0ms (阈值: 150ms)
+2024-12-08 22:28:19,336 - IPEvaluator - INFO - OVERSEAS 延迟超出阈值 (160.0ms > 150ms)，未通过评估
+2024-12-08 22:28:19,336 - IPEvaluator - INFO - 
+处理默认线路:
+2024-12-08 22:28:19,336 - IPEvaluator - INFO - 默认线路平均延迟: 163.25ms
+2024-12-08 22:28:19,336 - IPEvaluator - INFO - 默认线路延迟超出阈值 (163.25ms > 150ms)，未通过评估
+2024-12-08 22:28:19,337 - IPEvaluator - INFO - 
+TELECOM 最终评估结果: 0 个IP
+2024-12-08 22:28:19,337 - IPEvaluator - INFO - 
+UNICOM 最终评估结果: 0 个IP
+2024-12-08 22:28:19,337 - IPEvaluator - INFO - 
+MOBILE 最终评估结果: 0 个IP
+2024-12-08 22:28:19,338 - IPEvaluator - INFO - 
+OVERSEAS 最终评估结果: 0 个IP
+2024-12-08 22:28:19,338 - IPEvaluator - INFO - 
+DEFAULT 最终评估结果: 0 个IP
+2024-12-08 22:35:00,004 - IPEvaluator - INFO - 
+评估IP 172.64.131.119:
+2024-12-08 22:35:00,005 - IPEvaluator - INFO - 
+检查 TELECOM 线路测试结果:
+2024-12-08 22:35:00,005 - IPEvaluator - INFO - 测试数据: {'latency': 153.0, 'loss': 0, 'available': True, 'node_id': '1169'}
+2024-12-08 22:35:00,005 - IPEvaluator - INFO - TELECOM 延迟: 153.0ms (阈值: 500ms)
+2024-12-08 22:35:00,006 - IPEvaluator - INFO - 计算HTTP得分，数据: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,006 - IPEvaluator - INFO - 
+计算 TELECOM 的HTTP得分:
+2024-12-08 22:35:00,006 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,007 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,007 - IPEvaluator - INFO - 百度DNS结果可用: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,007 - IPEvaluator - INFO - 选择最佳结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,007 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,008 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,008 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,008 - IPEvaluator - INFO - TELECOM HTTP得分: 19.9999
+2024-12-08 22:35:00,008 - IPEvaluator - INFO - 
+计算 TELECOM 的HTTP得分:
+2024-12-08 22:35:00,008 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,008 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,008 - IPEvaluator - INFO - 百度DNS结果可用: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - 选择最佳结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - TELECOM 总得分: 41.40478
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - 已添加到 TELECOM 评估结果
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - 
+检查 UNICOM 线路测试结果:
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - 测试数据: {'latency': 182.0, 'loss': 0, 'available': True, 'node_id': '1276'}
+2024-12-08 22:35:00,009 - IPEvaluator - INFO - UNICOM 延迟: 182.0ms (阈值: 500ms)
+2024-12-08 22:35:00,010 - IPEvaluator - INFO - 计算HTTP得分，数据: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,010 - IPEvaluator - INFO - 
+计算 UNICOM 的HTTP得分:
+2024-12-08 22:35:00,010 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,010 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,010 - IPEvaluator - INFO - 百度DNS结果可用: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,010 - IPEvaluator - INFO - 选择最佳结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,010 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,010 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,011 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,011 - IPEvaluator - INFO - UNICOM HTTP得分: 19.9999
+2024-12-08 22:35:00,011 - IPEvaluator - INFO - 
+计算 UNICOM 的HTTP得分:
+2024-12-08 22:35:00,011 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,011 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,011 - IPEvaluator - INFO - 百度DNS结果可用: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,011 - IPEvaluator - INFO - 选择最佳结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,012 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,012 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,012 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,012 - IPEvaluator - INFO - UNICOM 总得分: 41.40478
+2024-12-08 22:35:00,012 - IPEvaluator - INFO - 已添加到 UNICOM 评估结果
+2024-12-08 22:35:00,013 - IPEvaluator - INFO - 
+检查 MOBILE 线路测试结果:
+2024-12-08 22:35:00,013 - IPEvaluator - INFO - 测试数据: {'latency': 173.0, 'loss': 0, 'available': True, 'node_id': '1242'}
+2024-12-08 22:35:00,013 - IPEvaluator - INFO - MOBILE 延迟: 173.0ms (阈值: 500ms)
+2024-12-08 22:35:00,013 - IPEvaluator - INFO - 计算HTTP得分，数据: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,013 - IPEvaluator - INFO - 
+计算 MOBILE 的HTTP得分:
+2024-12-08 22:35:00,014 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,014 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,015 - IPEvaluator - INFO - 百度DNS结果可用: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,015 - IPEvaluator - INFO - 选择最佳结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,015 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,015 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,016 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,016 - IPEvaluator - INFO - MOBILE HTTP得分: 19.9999
+2024-12-08 22:35:00,016 - IPEvaluator - INFO - 
+计算 MOBILE 的HTTP得分:
+2024-12-08 22:35:00,016 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,017 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,017 - IPEvaluator - INFO - 百度DNS结果可用: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,017 - IPEvaluator - INFO - 选择最佳结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,017 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,017 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,017 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,018 - IPEvaluator - INFO - MOBILE 总得分: 41.40478
+2024-12-08 22:35:00,018 - IPEvaluator - INFO - 已添加到 MOBILE 评估结果
+2024-12-08 22:35:00,018 - IPEvaluator - INFO - 
+检查 OVERSEAS 线路测试结果:
+2024-12-08 22:35:00,018 - IPEvaluator - INFO - 测试数据: {'latency': 155.0, 'loss': 0, 'available': True, 'node_id': '1345'}
+2024-12-08 22:35:00,018 - IPEvaluator - INFO - OVERSEAS 延迟: 155.0ms (阈值: 500ms)
+2024-12-08 22:35:00,019 - IPEvaluator - INFO - 计算HTTP得分，数据: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,019 - IPEvaluator - INFO - 
+计算 OVERSEAS 的HTTP得分:
+2024-12-08 22:35:00,019 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,019 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,019 - IPEvaluator - INFO - 谷歌DNS结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,021 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,021 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,021 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,022 - IPEvaluator - INFO - OVERSEAS HTTP得分: 19.9999
+2024-12-08 22:35:00,022 - IPEvaluator - INFO - 
+计算 OVERSEAS 的HTTP得分:
+2024-12-08 22:35:00,022 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,022 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,022 - IPEvaluator - INFO - 谷歌DNS结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,023 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,023 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,023 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,023 - IPEvaluator - INFO - OVERSEAS 总得分: 41.40478
+2024-12-08 22:35:00,023 - IPEvaluator - INFO - 已添加到 OVERSEAS 评估结果
+2024-12-08 22:35:00,024 - IPEvaluator - INFO - 
+处理默认线路:
+2024-12-08 22:35:00,024 - IPEvaluator - INFO - 默认线路平均延迟: 165.75ms
+2024-12-08 22:35:00,024 - IPEvaluator - INFO - 
+计算 DEFAULT 的HTTP得分:
+2024-12-08 22:35:00,024 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,025 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,025 - IPEvaluator - INFO - DEFAULT线路选择最佳结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,026 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,026 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,026 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,026 - IPEvaluator - INFO - 默认线路 HTTP得分: 19.9999
+2024-12-08 22:35:00,027 - IPEvaluator - INFO - 
+计算 DEFAULT 的HTTP得分:
+2024-12-08 22:35:00,027 - IPEvaluator - INFO - HTTP测试结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'results': {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}, 'aliyun_result': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'baidu_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'google_result': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,027 - IPEvaluator - INFO - DNS测试结果详情: {'ALIYUN': {'available': False, 'ttfb': inf, 'total_time': inf, 'error': ''}, 'BAIDU': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}, 'GOOGLE': {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}}
+2024-12-08 22:35:00,027 - IPEvaluator - INFO - DEFAULT线路选择最佳结果: {'available': True, 'ttfb': 0.001, 'total_time': 0.005, 'error': None}
+2024-12-08 22:35:00,027 - IPEvaluator - INFO - TTFB: 0.001ms, 得分: 100.00
+2024-12-08 22:35:00,027 - IPEvaluator - INFO - Total Time: 0.005ms, 得分: 100.00
+2024-12-08 22:35:00,028 - IPEvaluator - INFO - 最终HTTP得分: 20.00
+2024-12-08 22:35:00,028 - IPEvaluator - INFO - 默认线路总得分: 41.40478
+2024-12-08 22:35:00,028 - IPEvaluator - INFO - 已添加到默认线路评估结果
+2024-12-08 22:35:00,028 - IPEvaluator - INFO - 
+TELECOM 最终评估结果: 1 个IP
+2024-12-08 22:35:00,028 - IPEvaluator - INFO - IP: 172.64.131.119, 得分: 41.40, 延迟: 153.0ms, HTTP得分: 20.00
+2024-12-08 22:35:00,029 - IPEvaluator - INFO - 
+UNICOM 最终评估结果: 1 个IP
+2024-12-08 22:35:00,029 - IPEvaluator - INFO - IP: 172.64.131.119, 得分: 41.40, 延迟: 182.0ms, HTTP得分: 20.00
+2024-12-08 22:35:00,029 - IPEvaluator - INFO - 
+MOBILE 最终评估结果: 1 个IP
+2024-12-08 22:35:00,030 - IPEvaluator - INFO - IP: 172.64.131.119, 得分: 41.40, 延迟: 173.0ms, HTTP得分: 20.00
+2024-12-08 22:35:00,030 - IPEvaluator - INFO - 
+OVERSEAS 最终评估结果: 1 个IP
+2024-12-08 22:35:00,031 - IPEvaluator - INFO - IP: 172.64.131.119, 得分: 41.40, 延迟: 155.0ms, HTTP得分: 20.00
+2024-12-08 22:35:00,031 - IPEvaluator - INFO - 
+DEFAULT 最终评估结果: 1 个IP
+2024-12-08 22:35:00,031 - IPEvaluator - INFO - IP: 172.64.131.119, 得分: 41.40, 延迟: 165.8ms, HTTP得分: 20.00

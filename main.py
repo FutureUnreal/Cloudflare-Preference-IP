@@ -267,7 +267,6 @@ async def main():
         # 多节点验证
         logger.info("开始多节点验证...")
         validated_evaluations = await validator.batch_validate(evaluations)
-        logger.info("验证后的结果:")
         for isp, ips in validated_evaluations.items():
             logger.info(f"{isp}: {len(ips)} 个IP")
             for ip_data in ips:

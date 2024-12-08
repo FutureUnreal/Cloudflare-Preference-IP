@@ -6,7 +6,7 @@
     "retry_delay": 0,
     "nodes_per_test": 1,
     "sample_rate": 0.0002,
-    "sample_size": 1,
+    "sample_size": 100,
     "overseas_mode": true,
     "concurrent_limit": 1
   },
@@ -24,17 +24,17 @@
 
   "evaluation": {
     "latency_thresholds": {
-      "telecom_latency_threshold": 500,
-      "unicom_latency_threshold": 500,
-      "mobile_latency_threshold": 500,
-      "overseas_latency_threshold": 500,
-      "default_latency_threshold": 500
+      "telecom_latency_threshold": 120,
+      "unicom_latency_threshold": 120,
+      "mobile_latency_threshold": 120,
+      "overseas_latency_threshold": 100,
+      "default_latency_threshold": 150
     },
 
     "http_thresholds": {
-      "ttfb_threshold": 500,
-      "total_time_threshold": 2000,
-      "success_rate": 0.1
+      "ttfb_threshold": 200,
+      "total_time_threshold": 1000,
+      "success_rate": 0.8
     },
 
     "stability_thresholds": {

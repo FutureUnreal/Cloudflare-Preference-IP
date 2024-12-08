@@ -1,43 +1,42 @@
 [
   {
-    "ip": "172.64.131.119",
+    "ip": "104.27.39.247",
     "status": "ok",
-    "timestamp": "2024-12-08T22:41:31.873777",
+    "timestamp": "2024-12-08T22:18:41.126324",
     "tests": {
       "TELECOM": {
-        "latency": 153.0,
+        "latency": 220.0,
         "loss": 0,
         "available": true,
-        "node_id": "1169"
+        "node_id": "1312"
       },
       "UNICOM": {
-        "latency": 182.0,
+        "latency": 189.0,
         "loss": 0,
         "available": true,
-        "node_id": "1276"
+        "node_id": "1226"
       },
       "MOBILE": {
-        "latency": 173.0,
+        "latency": 184.0,
         "loss": 0,
         "available": true,
-        "node_id": "1242"
-      },
-      "OVERSEAS": {
-        "latency": 155.0,
-        "loss": 0,
-        "available": true,
-        "node_id": "1345"
+        "node_id": "1250"
       }
     },
     "http_tests": {
+      "ALIYUN": {
+        "ttfb": 0.001,
+        "total_time": 0.003,
+        "available": true
+      },
       "BAIDU": {
         "ttfb": 0.001,
-        "total_time": 0.005,
+        "total_time": 0.003,
         "available": true
       },
       "GOOGLE": {
         "ttfb": 0.001,
-        "total_time": 0.005,
+        "total_time": 0.004,
         "available": true
       }
     }

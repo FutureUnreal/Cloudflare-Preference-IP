@@ -112,7 +112,6 @@ class IPTester:
                         if isp not in results['tests'] or \
                         results['tests'][isp].get('latency', float('inf')) > result.get('latency', float('inf')):
                             results['tests'][isp] = result
-                            self.logger.info(f"更新 {isp} 最佳结果 - 延迟: {result['latency']}ms")
                     else:
                         self.logger.info(f"IP {ip} - {isp} node {node_id} - 测试不可用")
                 except Exception as e:
@@ -126,7 +125,6 @@ class IPTester:
             http_tester = HTTPTester(self.config)
             http_result = await http_tester.test_ip(ip)
             results['http_test'] = http_result
-            self.logger.info(f"HTTP测试结果: {http_result}")
         except Exception as e:
             self.logger.error(f"HTTP测试失败 {ip}: {str(e)}")
             results['http_test'] = {'available': False, 'error': str(e)}

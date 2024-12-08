@@ -77,7 +77,6 @@ class IPValidator:
                 return None
                 
             selected_nodes = random.sample(available_nodes, validation_count)
-            self.logger.info(f"选择的验证节点: {selected_nodes}")
             
             # 并发测试所有选中的节点
             ping_tasks = [self._test_single_node(ip, node) for node in selected_nodes]
@@ -91,7 +90,7 @@ class IPValidator:
                                 r.latency <= self.latency_thresholds[isp]]
             ping_success_rate = len(valid_ping_results) / len(ping_results)
             
-            self.logger.info(f"Ping验证结果: 总计 {len(ping_results)} 个节点, "
+            self.logger.info(f"Ping 验证结果: 总计 {len(ping_results)} 个节点, "
                            f"达标 {len(valid_ping_results)} 个, "
                            f"成功率 {ping_success_rate:.2%}")
             

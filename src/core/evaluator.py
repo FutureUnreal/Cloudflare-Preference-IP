@@ -14,12 +14,13 @@ class IPEvaluator:
         eval_config = config['evaluation']
         
         # Ping测试阈值
+        latency_config = eval_config.get('latency_thresholds', {})
         self.latency_thresholds = {
-            'TELECOM': eval_config.get('telecom_latency_threshold', 100),
-            'UNICOM': eval_config.get('unicom_latency_threshold', 100),
-            'MOBILE': eval_config.get('mobile_latency_threshold', 100),
-            'OVERSEAS': eval_config.get('overseas_latency_threshold', 150),
-            'DEFAULT': eval_config.get('default_latency_threshold', 150)
+            'TELECOM': latency_config.get('telecom_latency_threshold', 100),
+            'UNICOM': latency_config.get('unicom_latency_threshold', 100),
+            'MOBILE': latency_config.get('mobile_latency_threshold', 100),
+            'OVERSEAS': latency_config.get('overseas_latency_threshold', 150),
+            'DEFAULT': latency_config.get('default_latency_threshold', 150)
         }
         
         # HTTP测试阈值
@@ -180,29 +181,22 @@ class IPEvaluator:
 
     def _calculate_http_score(self, http_result: Dict, isp: str) -> float:
         """计算HTTP测试得分"""
-        self.logger.info(f"\n计算 {isp} 的HTTP得分:")
-        self.logger.info(f"HTTP测试结果: {http_result}")
-        
         if not http_result or not http_result.get('available', False):
             self.logger.info("HTTP测试结果为空或不可用")
             return 0
             
         results = http_result.get('results', {})
-        self.logger.info(f"DNS测试结果详情: {results}")
         
         # 根据ISP选择合适的DNS测试结果
         if isp in ['TELECOM', 'UNICOM', 'MOBILE']:
-            # 国内线路使用阿里DNS和百度DNS的更好结果
             aliyun_result = results.get('ALIYUN', {})
             baidu_result = results.get('BAIDU', {})
             valid_results = []
             
             if aliyun_result.get('available', False):
                 valid_results.append(aliyun_result)
-                self.logger.info(f"阿里DNS结果可用: {aliyun_result}")
             if baidu_result.get('available', False):
                 valid_results.append(baidu_result)
-                self.logger.info(f"百度DNS结果可用: {baidu_result}")
                 
             if not valid_results:
                 self.logger.info("没有可用的国内DNS测试结果")
@@ -215,7 +209,6 @@ class IPEvaluator:
         elif isp == 'OVERSEAS':
             # 境外线路使用谷歌DNS的结果
             test_result = results.get('GOOGLE', {})
-            self.logger.info(f"谷歌DNS结果: {test_result}")
             if not test_result.get('available', False):
                 self.logger.info("谷歌DNS测试不可用")
                 return 0
@@ -227,7 +220,6 @@ class IPEvaluator:
                 self.logger.info("没有可用的DNS测试结果")
                 return 0
             test_result = min(valid_results, key=lambda x: x.get('ttfb', float('inf')))
-            self.logger.info(f"DEFAULT线路选择最佳结果: {test_result}")
         
         # 计算得分
         ttfb = test_result.get('ttfb', float('inf'))
@@ -238,10 +230,6 @@ class IPEvaluator:
         
         final_score = (ttfb_score * self.weights['http']['ttfb'] +
                 time_score * self.weights['http']['total_time'])
-                
-        self.logger.info(f"TTFB: {ttfb}ms, 得分: {ttfb_score:.2f}")
-        self.logger.info(f"Total Time: {total_time}ms, 得分: {time_score:.2f}")
-        self.logger.info(f"最终HTTP得分: {final_score:.2f}")
         
         return final_score
 
@@ -283,68 +271,71 @@ class IPEvaluator:
             if 'tests' not in result:
                 self.logger.warning(f"IP {ip} 没有tests字段")
                 continue
-                
-            http_test = result.get('http_test', {})
-            
-            # 遍历所有测试结果
-            for isp, test in result['tests'].items():
+
+            for isp, test in result['tests'].items():            
                 if not test.get('available', False):
+                    self.logger.info(f"{isp} 测试不可用")
                     continue
                     
                 latency = test.get('latency', float('inf'))
                 threshold = self.latency_thresholds.get(isp, float('inf'))
                 
                 if latency < threshold:
-                    # 计算该运营商的HTTP得分
-                    http_score = self._calculate_http_score(http_test, isp)
+                    # 计算HTTP得分
+                    http_result = result.get('http_test', {})
+                    http_score = self._calculate_http_score(http_result, isp)
                     
-                    if http_score > 0:  # HTTP测试也通过
+                    if http_score > 0:
+                        score = self.calculate_score(result, isp)
+                        self.logger.info(f"{isp} 总得分: {score}")
+                        
                         evaluations[isp].append({
                             'ip': ip,
-                            'score': self.calculate_score(result, isp),
+                            'score': score,
                             'latency': latency,
                             'loss': test.get('loss', 0),
                             'http_score': http_score,
                             'node_id': test.get('node_id')
                         })
-                        self.logger.info(f"添加到 {isp} 评估结果")
-            
-            # 默认线路的处理
-            available_tests = [
-                test for isp, test in result['tests'].items() 
-                if test.get('available', False) and isp != 'DEFAULT'
-            ]
-            
-            if available_tests:
-                avg_latency = statistics.mean(
-                    test['latency'] for test in available_tests
-                )
-                threshold = self.latency_thresholds['DEFAULT']
+                        self.logger.info(f"已添加到 {isp} 评估结果")
+                    else:
+                        self.logger.info(f"{isp} HTTP得分为0，未通过评估")
+                else:
+                    self.logger.info(f"{isp} 延迟超出阈值 ({latency}ms > {threshold}ms)，未通过评估")
+
+            # 处理默认线路
+            if any(test.get('available', False) for test in result['tests'].values()):
+                self.logger.info("\n处理默认线路:")
+                # 计算平均延迟
+                valid_tests = [test for test in result['tests'].values() 
+                            if test.get('available', False)]
+                avg_latency = sum(t['latency'] for t in valid_tests) / len(valid_tests)
+                self.logger.info(f"默认线路平均延迟: {avg_latency}ms")
                 
-                if avg_latency < threshold:
-                    http_score = self._calculate_http_score(http_test, 'DEFAULT')
+                if avg_latency < self.latency_thresholds['DEFAULT']:
+                    http_score = self._calculate_http_score(result.get('http_test', {}), 'DEFAULT')
+                    
                     if http_score > 0:
+                        score = self.calculate_score(result, 'DEFAULT')
+                        
                         evaluations['DEFAULT'].append({
                             'ip': ip,
-                            'score': self.calculate_score(result, 'DEFAULT'),
+                            'score': score,
                             'latency': avg_latency,
-                            'loss': statistics.mean(test.get('loss', 0) for test in available_tests),
-                            'http_score': http_score,
-                            'tests_count': len(available_tests)
+                            'loss': sum(t.get('loss', 0) for t in valid_tests) / len(valid_tests),
+                            'http_score': http_score
                         })
+                    else:
+                        self.logger.info("默认线路 HTTP得分为0，未通过评估")
+                else:
+                    self.logger.info(f"默认线路延迟超出阈值 ({avg_latency}ms > {self.latency_thresholds['DEFAULT']}ms)，未通过评估")
         
-        # 对每个ISP的结果按分数排序
-        for isp in evaluations:
-            evaluations[isp].sort(key=lambda x: (-x['score'], x['latency']))
-            
-            self.logger.info(f"\n{isp} 评估结果:")
-            for ip_data in evaluations[isp]:
-                self.logger.info(
-                    f"IP: {ip_data['ip']}, "
-                    f"延迟: {ip_data['latency']:.1f}ms, "
-                    f"得分: {ip_data['score']:.1f}, "
-                    f"HTTP得分: {ip_data['http_score']:.1f}"
-                )
+        # 最终结果汇总
+        for isp, ips in evaluations.items():
+            self.logger.info(f"\n{isp} 最终评估结果: {len(ips)} 个IP")
+            for ip_data in ips:
+                self.logger.info(f"IP: {ip_data['ip']}, 得分: {ip_data['score']:.2f}, "
+                            f"延迟: {ip_data['latency']:.1f}ms, HTTP得分: {ip_data['http_score']:.2f}")
         
         return evaluations
 

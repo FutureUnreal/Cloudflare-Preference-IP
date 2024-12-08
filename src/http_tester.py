@@ -161,8 +161,6 @@ class HTTPTester:
                                        data=data,
                                        timeout=self.timeout)
             )
-            self.logger.info(f"测试请求响应状态码: {response.status_code}")
-            self.logger.debug(f"响应Cookie: {response.cookies}")
 
             # 解析WebSocket信息
             content = response.text
@@ -179,11 +177,8 @@ class HTTPTester:
                 (task_id + "token_20230313000136kwyktxb0tgspm00yo5").encode()
             ).hexdigest()[8:-8]
 
-            self.logger.info(f"WebSocket连接信息: URL={wss_url}, TaskID={task_id}")
-
             # 获取测试结果
             result = await self._get_websocket_data(wss_url, task_id, task_token)
-            self.logger.info(f"WebSocket测试结果: {result}")
             
             return result
 
@@ -202,7 +197,6 @@ class HTTPTester:
         
         # 对每个DNS服务器进行测试
         for dns_type, dns_server in self.dns_servers.items():
-            self.logger.info(f"使用 {dns_type} DNS({dns_server})测试 IP {ip}")
             result = await self.test_single_ip_with_dns(ip, dns_type, dns_server)
             results[dns_type] = result
             
