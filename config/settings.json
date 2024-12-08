@@ -6,14 +6,14 @@
     "retry_delay": 0,
     "nodes_per_test": 1,
     "sample_rate": 0.0002,
-    "sample_size": 200,
+    "sample_size": 180,
     "overseas_mode": true
   },
   "evaluation": {
     "telecom_latency_threshold": 120,
     "unicom_latency_threshold": 120,
     "mobile_latency_threshold": 120,
-    "overseas_latency_threshold": 100,
+    "overseas_latency_threshold": 120,
     "default_latency_threshold": 150,
     "stability_threshold": 100,
     "overseas_stability_threshold": 50,
@@ -52,8 +52,8 @@
   },
   "domains": {
     "default": {
-      "domain": "ai-unreal.top",
-      "subdomain": "cdn",
+      "domain": "",
+      "subdomain": "",
       "lines": [
         "CM",
         "CU",

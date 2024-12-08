@@ -14,7 +14,7 @@ from src.dns.dnspod import DNSPod
 from src.dns.aliyun import AliDNS
 from src.dns.huawei import HuaweiDNS
 
-def setup_logging(self):
+def main(self):
     """设置日志"""
     self.logger = logging.getLogger('IPEvaluator')
     
@@ -244,13 +244,11 @@ async def main():
         
         # 获取当前DNS记录
         records = dns_client.get_record(domain, 100, sub_domain, "A")
-        logger.info(f"DNS查询结果: {json.dumps(records, indent=2, ensure_ascii=False)}")  # 添加 ensure_ascii=False
 
         if isinstance(records, dict) and 'records' in records.get('data', {}):
             for record in records['data']['records']:
                 line = record.get('line', '')
                 value = record.get('value', '')
-                logger.info(f"处理记录: line={line}, value={value}")
                 
                 # 处理Unicode编码的线路名称
                 if line == '移动' or line == '\u79fb\u52a8':

@@ -153,30 +153,24 @@ class IPRecorder:
             self.logger.error(f"更新不良IP记录失败 {ip}: {str(e)}")
 
     def save_test_results(self, results: List[Dict]):
-        """保存测试结果"""
+        """保存测试结果并更新历史"""
         try:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             
-            # 保存带时间戳的版本
+            # 保存原始测试结果
             results_file = self.results_dir / f'test_results_{timestamp}.json'
-            with open(results_file, 'w') as f:
-                json.dump(results, f, indent=2)
-            
-            # 保存最新版本
             latest_file = self.results_dir / 'test_results_latest.json'
-            with open(latest_file, 'w') as f:
-                json.dump(results, f, indent=2)
             
-            # 更新历史记录
-            for result in results:
-                if result['status'] == 'ok':
-                    self.update_ip_history(result['ip'], result)
-                    if not any(r.get('available', False) for r in result['tests'].values()):
-                        self.update_bad_ip(result['ip'], result)
+            for file in [results_file, latest_file]:
+                with open(file, 'w') as f:
+                    json.dump(results, f, indent=2)
             
-            # 保存历史和不良IP记录
-            self._save_history()
-            self._save_bad_ips()
+            # 更新并保存历史数据
+            self.save_history(results)
+            
+            # 记录成功数量
+            success_count = sum(1 for r in results if r['status'] == 'ok')
+            self.logger.info(f"保存测试结果: 总计 {len(results)} 个IP, 成功 {success_count} 个")
             
             # 清理旧文件
             self.cleanup_old_files()

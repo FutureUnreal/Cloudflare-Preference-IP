@@ -32,14 +32,10 @@ class IPHistoryAnalyzer:
        self.latency_volatility_threshold = config.get('latency_volatility', 0.3)
        self.availability_threshold = config.get('availability_threshold', 0.9)
 
-
    async def analyze_and_update(self, current_ips: Dict[str, List[str]], 
-                         new_test_results: Dict[str, List[Dict]]) -> Dict[str, List[str]]:
+                        new_test_results: Dict[str, List[Dict]]) -> Dict[str, List[str]]:
         """分析并选择最优IP组合"""
         try:
-            self.logger.info("开始分析IP...")
-            self.logger.info(f"历史记录中的IP数量: {len(self.history)}")
-            
             optimized_ips = {
                 'TELECOM': [],
                 'UNICOM': [],
@@ -49,23 +45,13 @@ class IPHistoryAnalyzer:
             }
 
             for isp in optimized_ips.keys():
-                self.logger.info(f"\n处理 {isp} 线路...")
-                
-                # 分别获取当前IP和新IP的得分
+                # 计算当前IP的得分
                 current_ip_scores = {}
                 if isp in current_ips:
-                    self.logger.info(f"{isp} 当前使用的IP列表: {current_ips[isp]}")
                     for ip in current_ips[isp]:
-                        self.logger.info(f"计算IP {ip} 的历史得分")
-                        # 这里修改为传入 isp 参数
                         score = await self._calculate_historical_score(ip, isp)
-                        self.logger.info(f"IP {ip} 的历史得分: {score}")
                         if score > 0:
                             current_ip_scores[ip] = score
-                        else:
-                            self.logger.info(f"IP {ip} 得分为0，不计入当前IP得分")
-                            
-                self.logger.info(f"{isp} 当前IP得分汇总: {current_ip_scores}")
 
                 # 处理新测试的IP
                 new_ip_scores = {}
@@ -73,12 +59,9 @@ class IPHistoryAnalyzer:
                     for result in new_test_results[isp]:
                         ip = result['ip']
                         latency = result['latency']
-                        # 使用延迟的倒数作为得分
                         score = 1000 / latency if latency > 0 else 0
                         if score > 0:
                             new_ip_scores[ip] = score
-                            self.logger.info(f"新测试 IP {ip} 得分: {score} (延迟: {latency}ms)")
-                    self.logger.info(f"{isp} 新测试IP得分汇总: {new_ip_scores}")
 
                 # 合并得分并排序
                 all_scores = {**current_ip_scores, **new_ip_scores}
@@ -93,15 +76,12 @@ class IPHistoryAnalyzer:
                 
                 if selected_ips:
                     optimized_ips[isp] = selected_ips
-                    self.logger.info(f"{isp} 最终选择的IP: {selected_ips}")
-                else:
-                    self.logger.warning(f"{isp} 没有合格的IP")
+                    self.logger.info(f"{isp} 最终选择IP: {selected_ips}")
 
-            self.logger.info(f"IP分析完成，最终选择: {optimized_ips}")
             return optimized_ips
 
         except Exception as e:
-            self.logger.error(f"IP分析失败: {str(e)}", exc_info=True)
+            self.logger.error(f"IP分析失败: {str(e)}")
             return current_ips
 
    async def _analyze_ip_batch(self, ips: List[str]) -> Dict[str, float]:
@@ -254,11 +234,14 @@ class IPHistoryAnalyzer:
        return {}
    
    def save_history(self, test_results: List[Dict]):
-        """保存新的测试结果到历史记录"""
+        """更新和保存IP历史记录"""
         try:
             timestamp = datetime.now().isoformat()
             
             for result in test_results:
+                if result['status'] != 'ok':
+                    continue
+                    
                 ip = result['ip']
                 if ip not in self.history:
                     self.history[ip] = {
@@ -267,35 +250,35 @@ class IPHistoryAnalyzer:
                         'last_update': timestamp
                     }
                 
-                # 更新各线路的延迟
+                # 更新延迟数据
                 for isp, test in result['tests'].items():
                     if test.get('available', False):
-                        # 如果已有记录，做加权平均
                         if isp in self.history[ip]['latency']:
                             old_latency = self.history[ip]['latency'][isp]
                             new_latency = test['latency']
-                            # 新数据权重0.7，旧数据权重0.3
-                            weighted_latency = new_latency * 0.7 + old_latency * 0.3
-                            self.history[ip]['latency'][isp] = weighted_latency
+                            self.history[ip]['latency'][isp] = new_latency * 0.7 + old_latency * 0.3
                         else:
                             self.history[ip]['latency'][isp] = test['latency']
-                            
-                # 计算默认线路的延迟（所有可用线路的平均值）
+                
+                # 更新默认线路
                 available_latencies = [
                     latency for isp, latency in self.history[ip]['latency'].items()
                     if isp != 'DEFAULT'
                 ]
                 if available_latencies:
                     self.history[ip]['latency']['DEFAULT'] = statistics.mean(available_latencies)
-                    
+                
                 # 更新计数和时间戳
                 self.history[ip]['update_count'] += 1
                 self.history[ip]['last_update'] = timestamp
                 
-            # 保存到文件
-            self.results_dir.mkdir(exist_ok=True)
+                # 处理不良IP
+                if not any(test.get('available', False) for test in result['tests'].values()):
+                    self.update_bad_ip(ip, result)
+            
+            # 保存历史记录
             with open(self.results_dir / 'ip_history.json', 'w') as f:
                 json.dump(self.history, f, indent=2)
-                
+            
         except Exception as e:
             self.logger.error(f"保存历史记录失败: {str(e)}")

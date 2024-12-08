@@ -45,7 +45,6 @@ class AliDNS:
 
     def create_record(self, domain: str, sub_domain: str, value: str, 
                      record_type: str = "A", line: str = "默认", ttl: int = 600) -> dict:
-        logger.info(f"创建记录参数: domain={domain}, sub_domain={sub_domain}, value={value}, type={record_type}, line={line}, ttl={ttl}")
         
         request = AddDomainRecordRequest.AddDomainRecordRequest()
         request.set_DomainName(domain)
@@ -75,7 +74,6 @@ class AliDNS:
             'Line': mapped_line,
             'TTL': ttl
         }
-        logger.info(f"完整请求参数: {json.dumps(request_params, ensure_ascii=False)}")
         
         result = self.client.do_action(request).decode('utf-8')
         return json.loads(result)

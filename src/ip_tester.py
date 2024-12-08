@@ -48,23 +48,6 @@ class IPTester:
     async def start(self, ip_list: List[str]) -> List[Dict]:
         try:
             results = await self.test_batch(ip_list)
-            
-            # 保存最终结果
-            if results:
-                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                result_file = self.results_dir / f'test_results_{timestamp}.json'
-                with open(result_file, 'w') as f:
-                    json.dump(results, f, indent=2)
-                
-                # 打印测试结果
-                for result in results:
-                    self.logger.info(f"IP: {result['ip']} 测试结果:")
-                    for isp, data in result['tests'].items():
-                        if data['available']:
-                            self.logger.info(f"  {isp}: 延迟 {data['latency']}ms")
-                        else:
-                            self.logger.info(f"  {isp}: 不可用")
-            
             return results
         except Exception as e:
             self.logger.error(f"测试过程发生错误: {str(e)}")
