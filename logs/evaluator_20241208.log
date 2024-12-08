@@ -1,0 +1,646 @@
+2024-12-08 19:22:15,063 - IPEvaluator - INFO - 
+评估IP 104.18.184.71:
+2024-12-08 19:22:15,064 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "104.18.184.71",
+  "status": "ok",
+  "tests": {
+    "TELECOM": {
+      "latency": 155.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1311"
+    },
+    "UNICOM": {
+      "latency": 185.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1277"
+    },
+    "MOBILE": {
+      "latency": 52.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1283"
+    },
+    "OVERSEAS": {
+      "latency": 139.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1345"
+    }
+  },
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "available": false,
+        "error": null
+      }
+    ]
+  }
+}
+2024-12-08 19:22:15,065 - IPEvaluator - INFO - TELECOM 测试结果: {'latency': 155.0, 'loss': 0, 'available': True, 'node_id': '1311'}
+2024-12-08 19:22:15,065 - IPEvaluator - INFO - TELECOM: 延迟=155.0ms, 阈值=120ms
+2024-12-08 19:22:15,065 - IPEvaluator - INFO - UNICOM 测试结果: {'latency': 185.0, 'loss': 0, 'available': True, 'node_id': '1277'}
+2024-12-08 19:22:15,065 - IPEvaluator - INFO - UNICOM: 延迟=185.0ms, 阈值=120ms
+2024-12-08 19:22:15,066 - IPEvaluator - INFO - MOBILE 测试结果: {'latency': 52.0, 'loss': 0, 'available': True, 'node_id': '1283'}
+2024-12-08 19:22:15,066 - IPEvaluator - INFO - MOBILE: 延迟=52.0ms, 阈值=120ms
+2024-12-08 19:22:15,066 - IPEvaluator - INFO - 添加到 MOBILE 评估结果
+2024-12-08 19:22:15,066 - IPEvaluator - INFO - OVERSEAS 测试结果: {'latency': 139.0, 'loss': 0, 'available': True, 'node_id': '1345'}
+2024-12-08 19:22:15,066 - IPEvaluator - INFO - OVERSEAS: 延迟=139.0ms, 阈值=120ms
+2024-12-08 19:22:15,066 - IPEvaluator - INFO - DEFAULT 线路评估: 平均延迟=132.75ms, 阈值=150ms
+2024-12-08 19:22:15,066 - IPEvaluator - INFO - 添加到 DEFAULT 评估结果
+2024-12-08 19:22:15,066 - IPEvaluator - INFO - 
+评估IP 172.64.159.86:
+2024-12-08 19:22:15,067 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "172.64.159.86",
+  "status": "ok",
+  "tests": {
+    "TELECOM": {
+      "latency": 174.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1214"
+    },
+    "UNICOM": {
+      "latency": 169.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1278"
+    },
+    "MOBILE": {
+      "latency": 57.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1250"
+    },
+    "OVERSEAS": {
+      "latency": 168.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1343"
+    }
+  },
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "available": false,
+        "error": null
+      }
+    ]
+  }
+}
+2024-12-08 19:22:15,068 - IPEvaluator - INFO - TELECOM 测试结果: {'latency': 174.0, 'loss': 0, 'available': True, 'node_id': '1214'}
+2024-12-08 19:22:15,068 - IPEvaluator - INFO - TELECOM: 延迟=174.0ms, 阈值=120ms
+2024-12-08 19:22:15,068 - IPEvaluator - INFO - UNICOM 测试结果: {'latency': 169.0, 'loss': 0, 'available': True, 'node_id': '1278'}
+2024-12-08 19:22:15,068 - IPEvaluator - INFO - UNICOM: 延迟=169.0ms, 阈值=120ms
+2024-12-08 19:22:15,068 - IPEvaluator - INFO - MOBILE 测试结果: {'latency': 57.0, 'loss': 0, 'available': True, 'node_id': '1250'}
+2024-12-08 19:22:15,069 - IPEvaluator - INFO - MOBILE: 延迟=57.0ms, 阈值=120ms
+2024-12-08 19:22:15,069 - IPEvaluator - INFO - 添加到 MOBILE 评估结果
+2024-12-08 19:22:15,069 - IPEvaluator - INFO - OVERSEAS 测试结果: {'latency': 168.0, 'loss': 0, 'available': True, 'node_id': '1343'}
+2024-12-08 19:22:15,069 - IPEvaluator - INFO - OVERSEAS: 延迟=168.0ms, 阈值=120ms
+2024-12-08 19:22:15,077 - IPEvaluator - INFO - DEFAULT 线路评估: 平均延迟=142.0ms, 阈值=150ms
+2024-12-08 19:22:15,078 - IPEvaluator - INFO - 添加到 DEFAULT 评估结果
+2024-12-08 19:22:15,078 - IPEvaluator - INFO - TELECOM 评估结果: 0 个IP
+2024-12-08 19:22:15,078 - IPEvaluator - INFO - UNICOM 评估结果: 0 个IP
+2024-12-08 19:22:15,078 - IPEvaluator - INFO - MOBILE 评估结果: 2 个IP
+2024-12-08 19:22:15,078 - IPEvaluator - INFO -   IP: 104.18.184.71, 延迟: 52.0ms
+2024-12-08 19:22:15,079 - IPEvaluator - INFO -   IP: 172.64.159.86, 延迟: 57.0ms
+2024-12-08 19:22:15,079 - IPEvaluator - INFO - OVERSEAS 评估结果: 0 个IP
+2024-12-08 19:22:15,079 - IPEvaluator - INFO - DEFAULT 评估结果: 2 个IP
+2024-12-08 19:22:15,080 - IPEvaluator - INFO -   IP: 104.18.184.71, 延迟: 132.75ms
+2024-12-08 19:22:15,080 - IPEvaluator - INFO -   IP: 172.64.159.86, 延迟: 142.0ms
+2024-12-08 19:31:32,840 - IPEvaluator - INFO - 
+评估IP 172.66.151.223:
+2024-12-08 19:31:32,841 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "172.66.151.223",
+  "status": "ok",
+  "tests": {},
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "available": false,
+        "error": "HTTPSConnectionPool(host='www.itdog.cn', port=443): Max retries exceeded with url: /http/ (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x7619d4b7fec0>, 'Connection to www.itdog.cn timed out. (connect timeout=5)'))"
+      }
+    ]
+  }
+}
+2024-12-08 19:31:32,841 - IPEvaluator - INFO - 
+评估IP 104.21.77.203:
+2024-12-08 19:31:32,842 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "104.21.77.203",
+  "status": "ok",
+  "tests": {},
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "available": false,
+        "error": "HTTPSConnectionPool(host='www.itdog.cn', port=443): Max retries exceeded with url: /http/ (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x7619d4b7cec0>, 'Connection to www.itdog.cn timed out. (connect timeout=5)'))"
+      }
+    ]
+  }
+}
+2024-12-08 19:31:32,842 - IPEvaluator - INFO - TELECOM 评估结果: 0 个IP
+2024-12-08 19:31:32,842 - IPEvaluator - INFO - UNICOM 评估结果: 0 个IP
+2024-12-08 19:31:32,842 - IPEvaluator - INFO - MOBILE 评估结果: 0 个IP
+2024-12-08 19:31:32,843 - IPEvaluator - INFO - OVERSEAS 评估结果: 0 个IP
+2024-12-08 19:31:32,843 - IPEvaluator - INFO - DEFAULT 评估结果: 0 个IP
+2024-12-08 19:32:42,734 - IPEvaluator - INFO - 
+评估IP 104.24.23.132:
+2024-12-08 19:32:42,734 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "104.24.23.132",
+  "status": "ok",
+  "tests": {},
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "available": false,
+        "error": "HTTPSConnectionPool(host='www.itdog.cn', port=443): Max retries exceeded with url: /http/ (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x777c0029bb30>, 'Connection to www.itdog.cn timed out. (connect timeout=5)'))"
+      }
+    ]
+  }
+}
+2024-12-08 19:32:42,734 - IPEvaluator - INFO - 
+评估IP 172.67.208.134:
+2024-12-08 19:32:42,734 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "172.67.208.134",
+  "status": "ok",
+  "tests": {},
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "available": false,
+        "error": "HTTPSConnectionPool(host='www.itdog.cn', port=443): Max retries exceeded with url: /http/ (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x777c00299220>, 'Connection to www.itdog.cn timed out. (connect timeout=5)'))"
+      }
+    ]
+  }
+}
+2024-12-08 19:32:42,734 - IPEvaluator - INFO - TELECOM 评估结果: 0 个IP
+2024-12-08 19:32:42,735 - IPEvaluator - INFO - UNICOM 评估结果: 0 个IP
+2024-12-08 19:32:42,735 - IPEvaluator - INFO - MOBILE 评估结果: 0 个IP
+2024-12-08 19:32:42,735 - IPEvaluator - INFO - OVERSEAS 评估结果: 0 个IP
+2024-12-08 19:32:42,735 - IPEvaluator - INFO - DEFAULT 评估结果: 0 个IP
+2024-12-08 19:55:37,818 - IPEvaluator - INFO - 
+评估IP 172.64.223.201:
+2024-12-08 19:55:37,819 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "172.64.223.201",
+  "status": "ok",
+  "tests": {},
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "available": false,
+        "error": null
+      }
+    ]
+  }
+}
+2024-12-08 19:55:37,819 - IPEvaluator - INFO - 
+评估IP 104.17.66.220:
+2024-12-08 19:55:37,820 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "104.17.66.220",
+  "status": "ok",
+  "tests": {
+    "TELECOM": {
+      "latency": 184.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1214"
+    },
+    "UNICOM": {
+      "latency": 181.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1275"
+    },
+    "MOBILE": {
+      "latency": 164.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1237"
+    },
+    "OVERSEAS": {
+      "latency": 157.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1345"
+    }
+  },
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "available": false,
+        "error": null
+      }
+    ]
+  }
+}
+2024-12-08 19:55:37,820 - IPEvaluator - INFO - TELECOM 测试结果: {'latency': 184.0, 'loss': 0, 'available': True, 'node_id': '1214'}
+2024-12-08 19:55:37,821 - IPEvaluator - INFO - TELECOM: 延迟=184.0ms, 阈值=120ms
+2024-12-08 19:55:37,821 - IPEvaluator - INFO - UNICOM 测试结果: {'latency': 181.0, 'loss': 0, 'available': True, 'node_id': '1275'}
+2024-12-08 19:55:37,821 - IPEvaluator - INFO - UNICOM: 延迟=181.0ms, 阈值=120ms
+2024-12-08 19:55:37,821 - IPEvaluator - INFO - MOBILE 测试结果: {'latency': 164.0, 'loss': 0, 'available': True, 'node_id': '1237'}
+2024-12-08 19:55:37,821 - IPEvaluator - INFO - MOBILE: 延迟=164.0ms, 阈值=120ms
+2024-12-08 19:55:37,821 - IPEvaluator - INFO - OVERSEAS 测试结果: {'latency': 157.0, 'loss': 0, 'available': True, 'node_id': '1345'}
+2024-12-08 19:55:37,821 - IPEvaluator - INFO - OVERSEAS: 延迟=157.0ms, 阈值=100ms
+2024-12-08 19:55:37,822 - IPEvaluator - INFO - DEFAULT 线路评估: 平均延迟=171.5ms, 阈值=150ms
+2024-12-08 19:55:37,822 - IPEvaluator - INFO - TELECOM 评估结果: 0 个IP
+2024-12-08 19:55:37,822 - IPEvaluator - INFO - UNICOM 评估结果: 0 个IP
+2024-12-08 19:55:37,822 - IPEvaluator - INFO - MOBILE 评估结果: 0 个IP
+2024-12-08 19:55:37,822 - IPEvaluator - INFO - OVERSEAS 评估结果: 0 个IP
+2024-12-08 19:55:37,822 - IPEvaluator - INFO - DEFAULT 评估结果: 0 个IP
+2024-12-08 20:09:08,781 - IPEvaluator - INFO - 
+评估IP 104.27.159.138:
+2024-12-08 20:09:08,781 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "104.27.159.138",
+  "status": "ok",
+  "tests": {},
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "available": false,
+        "error": null
+      }
+    ]
+  }
+}
+2024-12-08 20:09:08,781 - IPEvaluator - INFO - 
+评估IP 104.17.76.136:
+2024-12-08 20:09:08,782 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "104.17.76.136",
+  "status": "ok",
+  "tests": {
+    "TELECOM": {
+      "latency": 195.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1304"
+    },
+    "UNICOM": {
+      "latency": 161.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1277"
+    },
+    "MOBILE": {
+      "latency": 184.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1249"
+    }
+  },
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "available": false,
+        "error": ""
+      }
+    ]
+  }
+}
+2024-12-08 20:09:08,782 - IPEvaluator - INFO - TELECOM 测试结果: {'latency': 195.0, 'loss': 0, 'available': True, 'node_id': '1304'}
+2024-12-08 20:09:08,782 - IPEvaluator - INFO - TELECOM: 延迟=195.0ms, 阈值=120ms
+2024-12-08 20:09:08,782 - IPEvaluator - INFO - UNICOM 测试结果: {'latency': 161.0, 'loss': 0, 'available': True, 'node_id': '1277'}
+2024-12-08 20:09:08,782 - IPEvaluator - INFO - UNICOM: 延迟=161.0ms, 阈值=120ms
+2024-12-08 20:09:08,782 - IPEvaluator - INFO - MOBILE 测试结果: {'latency': 184.0, 'loss': 0, 'available': True, 'node_id': '1249'}
+2024-12-08 20:09:08,782 - IPEvaluator - INFO - MOBILE: 延迟=184.0ms, 阈值=120ms
+2024-12-08 20:09:08,783 - IPEvaluator - INFO - DEFAULT 线路评估: 平均延迟=180.0ms, 阈值=150ms
+2024-12-08 20:09:08,783 - IPEvaluator - INFO - TELECOM 评估结果: 0 个IP
+2024-12-08 20:09:08,783 - IPEvaluator - INFO - UNICOM 评估结果: 0 个IP
+2024-12-08 20:09:08,783 - IPEvaluator - INFO - MOBILE 评估结果: 0 个IP
+2024-12-08 20:09:08,783 - IPEvaluator - INFO - OVERSEAS 评估结果: 0 个IP
+2024-12-08 20:09:08,783 - IPEvaluator - INFO - DEFAULT 评估结果: 0 个IP
+2024-12-08 20:20:00,278 - IPEvaluator - INFO - 
+评估IP 172.64.135.150:
+2024-12-08 20:20:00,278 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "172.64.135.150",
+  "status": "ok",
+  "tests": {
+    "TELECOM": {
+      "latency": 158.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1214"
+    },
+    "UNICOM": {
+      "latency": 165.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1278"
+    },
+    "MOBILE": {
+      "latency": 165.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1290"
+    },
+    "OVERSEAS": {
+      "latency": 166.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1343"
+    }
+  },
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "available": false,
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "error": null
+      }
+    ]
+  }
+}
+2024-12-08 20:20:00,278 - IPEvaluator - INFO - TELECOM 测试结果: {'latency': 158.0, 'loss': 0, 'available': True, 'node_id': '1214'}
+2024-12-08 20:20:00,278 - IPEvaluator - INFO - TELECOM: 延迟=158.0ms, 阈值=120ms
+2024-12-08 20:20:00,278 - IPEvaluator - INFO - UNICOM 测试结果: {'latency': 165.0, 'loss': 0, 'available': True, 'node_id': '1278'}
+2024-12-08 20:20:00,279 - IPEvaluator - INFO - UNICOM: 延迟=165.0ms, 阈值=120ms
+2024-12-08 20:20:00,279 - IPEvaluator - INFO - MOBILE 测试结果: {'latency': 165.0, 'loss': 0, 'available': True, 'node_id': '1290'}
+2024-12-08 20:20:00,279 - IPEvaluator - INFO - MOBILE: 延迟=165.0ms, 阈值=120ms
+2024-12-08 20:20:00,279 - IPEvaluator - INFO - OVERSEAS 测试结果: {'latency': 166.0, 'loss': 0, 'available': True, 'node_id': '1343'}
+2024-12-08 20:20:00,279 - IPEvaluator - INFO - OVERSEAS: 延迟=166.0ms, 阈值=100ms
+2024-12-08 20:20:00,279 - IPEvaluator - INFO - DEFAULT 线路评估: 平均延迟=163.5ms, 阈值=150ms
+2024-12-08 20:20:00,279 - IPEvaluator - INFO - 
+评估IP 104.22.61.71:
+2024-12-08 20:20:00,280 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "104.22.61.71",
+  "status": "ok",
+  "tests": {
+    "TELECOM": {
+      "latency": 160.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1169"
+    },
+    "UNICOM": {
+      "latency": 169.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1264"
+    },
+    "MOBILE": {
+      "latency": 155.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1290"
+    },
+    "OVERSEAS": {
+      "latency": 170.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1343"
+    }
+  },
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "available": false,
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "error": null
+      }
+    ]
+  }
+}
+2024-12-08 20:20:00,281 - IPEvaluator - INFO - TELECOM 测试结果: {'latency': 160.0, 'loss': 0, 'available': True, 'node_id': '1169'}
+2024-12-08 20:20:00,281 - IPEvaluator - INFO - TELECOM: 延迟=160.0ms, 阈值=120ms
+2024-12-08 20:20:00,281 - IPEvaluator - INFO - UNICOM 测试结果: {'latency': 169.0, 'loss': 0, 'available': True, 'node_id': '1264'}
+2024-12-08 20:20:00,281 - IPEvaluator - INFO - UNICOM: 延迟=169.0ms, 阈值=120ms
+2024-12-08 20:20:00,281 - IPEvaluator - INFO - MOBILE 测试结果: {'latency': 155.0, 'loss': 0, 'available': True, 'node_id': '1290'}
+2024-12-08 20:20:00,281 - IPEvaluator - INFO - MOBILE: 延迟=155.0ms, 阈值=120ms
+2024-12-08 20:20:00,281 - IPEvaluator - INFO - OVERSEAS 测试结果: {'latency': 170.0, 'loss': 0, 'available': True, 'node_id': '1343'}
+2024-12-08 20:20:00,282 - IPEvaluator - INFO - OVERSEAS: 延迟=170.0ms, 阈值=100ms
+2024-12-08 20:20:00,282 - IPEvaluator - INFO - DEFAULT 线路评估: 平均延迟=163.5ms, 阈值=150ms
+2024-12-08 20:20:00,282 - IPEvaluator - INFO - TELECOM 评估结果: 0 个IP
+2024-12-08 20:20:00,282 - IPEvaluator - INFO - UNICOM 评估结果: 0 个IP
+2024-12-08 20:20:00,282 - IPEvaluator - INFO - MOBILE 评估结果: 0 个IP
+2024-12-08 20:20:00,282 - IPEvaluator - INFO - OVERSEAS 评估结果: 0 个IP
+2024-12-08 20:20:00,283 - IPEvaluator - INFO - DEFAULT 评估结果: 0 个IP
+2024-12-08 20:23:07,450 - IPEvaluator - INFO - 
+评估IP 104.16.135.222:
+2024-12-08 20:23:07,451 - IPEvaluator - INFO - 测试结果详情: {
+  "ip": "104.16.135.222",
+  "status": "ok",
+  "tests": {
+    "TELECOM": {
+      "latency": 144.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1132"
+    },
+    "UNICOM": {
+      "latency": 188.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1266"
+    },
+    "MOBILE": {
+      "latency": 241.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1287"
+    },
+    "OVERSEAS": {
+      "latency": 159.0,
+      "loss": 0,
+      "available": true,
+      "node_id": "1343"
+    }
+  },
+  "http_test": {
+    "available": false,
+    "ttfb": Infinity,
+    "total_time": Infinity,
+    "results": [
+      {
+        "url": "https://www.baidu.com",
+        "available": false,
+        "ttfb": Infinity,
+        "total_time": Infinity,
+        "error": null
+      }
+    ]
+  }
+}
+2024-12-08 20:23:07,452 - IPEvaluator - INFO - TELECOM 测试结果: {'latency': 144.0, 'loss': 0, 'available': True, 'node_id': '1132'}
+2024-12-08 20:23:07,452 - IPEvaluator - INFO - TELECOM: 延迟=144.0ms, 阈值=120ms
+2024-12-08 20:23:07,452 - IPEvaluator - INFO - UNICOM 测试结果: {'latency': 188.0, 'loss': 0, 'available': True, 'node_id': '1266'}
+2024-12-08 20:23:07,452 - IPEvaluator - INFO - UNICOM: 延迟=188.0ms, 阈值=120ms
+2024-12-08 20:23:07,453 - IPEvaluator - INFO - MOBILE 测试结果: {'latency': 241.0, 'loss': 0, 'available': True, 'node_id': '1287'}
+2024-12-08 20:23:07,453 - IPEvaluator - INFO - MOBILE: 延迟=241.0ms, 阈值=120ms
+2024-12-08 20:23:07,453 - IPEvaluator - INFO - OVERSEAS 测试结果: {'latency': 159.0, 'loss': 0, 'available': True, 'node_id': '1343'}
+2024-12-08 20:23:07,453 - IPEvaluator - INFO - OVERSEAS: 延迟=159.0ms, 阈值=100ms
+2024-12-08 20:23:07,453 - IPEvaluator - INFO - DEFAULT 线路评估: 平均延迟=183.0ms, 阈值=150ms
+2024-12-08 20:23:07,453 - IPEvaluator - INFO - TELECOM 评估结果: 0 个IP
+2024-12-08 20:23:07,453 - IPEvaluator - INFO - UNICOM 评估结果: 0 个IP
+2024-12-08 20:23:07,453 - IPEvaluator - INFO - MOBILE 评估结果: 0 个IP
+2024-12-08 20:23:07,454 - IPEvaluator - INFO - OVERSEAS 评估结果: 0 个IP
+2024-12-08 20:23:07,454 - IPEvaluator - INFO - DEFAULT 评估结果: 0 个IP
+2024-12-08 21:07:50,980 - IPEvaluator - INFO - 
+评估IP 104.19.67.162:
+2024-12-08 21:07:50,981 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:07:50,981 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:07:50,981 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:07:50,981 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:07:50,981 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 21:11:12,815 - IPEvaluator - INFO - 
+评估IP 104.18.251.2:
+2024-12-08 21:11:12,815 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:11:12,815 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:11:12,815 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:11:12,815 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:11:12,815 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 21:16:09,982 - IPEvaluator - INFO - 
+评估IP 104.17.245.25:
+2024-12-08 21:16:09,982 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:16:09,982 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:16:09,982 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:16:09,982 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:16:09,983 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 21:22:33,735 - IPEvaluator - INFO - 
+评估IP 104.25.252.242:
+2024-12-08 21:22:33,736 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:22:33,736 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:22:33,737 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:22:33,737 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:22:33,737 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 21:32:43,602 - IPEvaluator - INFO - 
+评估IP 172.65.151.253:
+2024-12-08 21:32:43,602 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:32:43,603 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:32:43,603 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:32:43,603 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:32:43,603 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 21:38:26,915 - IPEvaluator - INFO - 
+评估IP 172.65.125.75:
+2024-12-08 21:38:26,915 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:38:26,915 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:38:26,915 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:38:26,916 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:38:26,916 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 21:46:22,317 - IPEvaluator - INFO - 
+评估IP 104.16.131.104:
+2024-12-08 21:46:22,320 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:46:22,320 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:46:22,320 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:46:22,320 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:46:22,321 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 21:50:32,026 - IPEvaluator - INFO - 
+评估IP 104.20.38.216:
+2024-12-08 21:50:32,026 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:50:32,026 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:50:32,027 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:50:32,027 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:50:32,027 - IPEvaluator - INFO - 
+DEFAULT 评估结果:
+2024-12-08 21:54:12,546 - IPEvaluator - INFO - 
+评估IP 104.17.108.115:
+2024-12-08 21:54:12,546 - IPEvaluator - INFO - 
+TELECOM 评估结果:
+2024-12-08 21:54:12,546 - IPEvaluator - INFO - 
+UNICOM 评估结果:
+2024-12-08 21:54:12,547 - IPEvaluator - INFO - 
+MOBILE 评估结果:
+2024-12-08 21:54:12,547 - IPEvaluator - INFO - 
+OVERSEAS 评估结果:
+2024-12-08 21:54:12,547 - IPEvaluator - INFO - 
+DEFAULT 评估结果:

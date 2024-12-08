@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import json
 import logging
+import statistics
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Union
@@ -57,19 +55,15 @@ class IPRecorder:
         if history_file.exists():
             try:
                 with open(history_file) as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    # 确保每个IP的数据结构完整
+                    for ip, record in data.items():
+                        if 'http_tests' not in record:
+                            record['http_tests'] = {}
+                    return data
             except Exception as e:
                 self.logger.error(f"加载历史记录失败: {str(e)}")
         return {}
-
-    def _save_history(self):
-        """保存IP历史记录"""
-        try:
-            history_file = self.results_dir / 'ip_history.json'
-            with open(history_file, 'w') as f:
-                json.dump(self.history, f, indent=2)
-        except Exception as e:
-            self.logger.error(f"保存历史记录失败: {str(e)}")
 
     def _load_bad_ips(self) -> Dict:
         """加载不良IP记录"""
@@ -90,30 +84,6 @@ class IPRecorder:
                 json.dump(self.bad_ips, f, indent=2)
         except Exception as e:
             self.logger.error(f"保存不良IP记录失败: {str(e)}")
-
-    def update_ip_history(self, ip: str, test_result: Dict):
-        """更新IP的历史记录"""
-        try:
-            if ip not in self.history:
-                self.history[ip] = []
-            
-            # 清理过期记录
-            cutoff = (datetime.now() - timedelta(days=self.max_history_days)).isoformat()
-            self.history[ip] = [
-                record for record in self.history[ip]
-                if record['timestamp'] > cutoff
-            ]
-            
-            # 添加新记录
-            new_record = {
-                'timestamp': datetime.now().isoformat(),
-                'tests': test_result['tests']
-            }
-            
-            self.history[ip].append(new_record)
-            
-        except Exception as e:
-            self.logger.error(f"更新历史记录失败 {ip}: {str(e)}")
 
     def update_bad_ip(self, ip: str, test_result: Dict):
         """更新不良IP记录"""
@@ -149,26 +119,58 @@ class IPRecorder:
             # 只保留最近10次测试记录
             record['recent_tests'] = record['recent_tests'][-10:]
             
+            # 保存记录
+            self._save_bad_ips()
+            
         except Exception as e:
             self.logger.error(f"更新不良IP记录失败 {ip}: {str(e)}")
 
     def save_test_results(self, results: List[Dict]):
-        """保存测试结果并更新历史"""
+        """保存测试结果"""
         try:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             
-            # 保存原始测试结果
-            results_file = self.results_dir / f'test_results_{timestamp}.json'
-            latest_file = self.results_dir / 'test_results_latest.json'
+            # 保存带时间戳的结果和最新结果
+            result_files = [
+                self.results_dir / f'test_results_{timestamp}.json',
+                self.results_dir / 'test_results_latest.json'
+            ]
             
-            for file in [results_file, latest_file]:
+            # 格式化测试结果
+            formatted_results = []
+            for result in results:
+                if result['status'] != 'ok':
+                    formatted_results.append(result)
+                    continue
+                
+                formatted_result = {
+                    'ip': result['ip'],
+                    'status': result['status'],
+                    'timestamp': datetime.now().isoformat(),
+                    'tests': result['tests'],
+                    'http_tests': {}
+                }
+                
+                # 格式化HTTP测试结果
+                if 'http_test' in result and result['http_test'].get('available', False):
+                    formatted_result['http_tests'] = {
+                        dns_type: {
+                            'ttfb': dns_result.get('ttfb', float('inf')),
+                            'total_time': dns_result.get('total_time', float('inf')),
+                            'available': True
+                        }
+                        for dns_type, dns_result in result['http_test'].get('results', {}).items()
+                        if dns_result.get('available', False)
+                    }
+                
+                formatted_results.append(formatted_result)
+            
+            # 保存结果文件
+            for file in result_files:
                 with open(file, 'w') as f:
-                    json.dump(results, f, indent=2)
+                    json.dump(formatted_results, f, indent=2)
             
-            # 更新并保存历史数据
-            self.save_history(results)
-            
-            # 记录成功数量
+            # 记录统计信息
             success_count = sum(1 for r in results if r['status'] == 'ok')
             self.logger.info(f"保存测试结果: 总计 {len(results)} 个IP, 成功 {success_count} 个")
             
@@ -192,21 +194,52 @@ class IPRecorder:
                         'total': len(ips),
                         'avg_latency': sum(ip['latency'] for ip in ips) / len(ips) if ips else 0,
                         'min_latency': min((ip['latency'] for ip in ips), default=0),
-                        'max_latency': max((ip['latency'] for ip in ips), default=0)
+                        'max_latency': max((ip['latency'] for ip in ips), default=0),
+                        'http_stats': self._calculate_http_stats(ips)
                     }
                     for isp, ips in evaluations.items() if ips
                 }
             }
             
+            # 保存结果
             with open(final_file, 'w') as f:
                 json.dump(result_data, f, indent=2)
-                
+            
             # 保存最新版本
             with open(self.results_dir / 'final_results_latest.json', 'w') as f:
                 json.dump(result_data, f, indent=2)
                 
         except Exception as e:
             self.logger.error(f"保存最终结果失败: {str(e)}")
+
+    def _calculate_http_stats(self, ip_results: List[Dict]) -> Dict:
+        """计算HTTP测试统计信息"""
+        stats = {
+            'ALIYUN': {'ttfb': [], 'total_time': []},
+            'BAIDU': {'ttfb': [], 'total_time': []},
+            'GOOGLE': {'ttfb': [], 'total_time': []}
+        }
+        
+        for ip in ip_results:
+            if 'http_tests' in ip:
+                for dns_type, result in ip['http_tests'].items():
+                    if dns_type in stats and result.get('available', False):
+                        stats[dns_type]['ttfb'].append(result['ttfb'])
+                        stats[dns_type]['total_time'].append(result['total_time'])
+        
+        # 计算平均值和最值
+        for dns_type in stats:
+            if stats[dns_type]['ttfb']:
+                stats[dns_type]['avg_ttfb'] = statistics.mean(stats[dns_type]['ttfb'])
+                stats[dns_type]['min_ttfb'] = min(stats[dns_type]['ttfb'])
+                stats[dns_type]['max_ttfb'] = max(stats[dns_type]['ttfb'])
+            
+            if stats[dns_type]['total_time']:
+                stats[dns_type]['avg_total_time'] = statistics.mean(stats[dns_type]['total_time'])
+                stats[dns_type]['min_total_time'] = min(stats[dns_type]['total_time'])
+                stats[dns_type]['max_total_time'] = max(stats[dns_type]['total_time'])
+        
+        return stats
 
     def cleanup_old_files(self):
         """清理旧的测试结果文件"""
@@ -237,7 +270,11 @@ class IPRecorder:
             records = self.history[ip]
             if days is not None:
                 cutoff = (datetime.now() - timedelta(days=days)).isoformat()
-                records = [r for r in records if r['timestamp'] > cutoff]
+                if isinstance(records, list):
+                    records = [r for r in records if r['timestamp'] > cutoff]
+                elif isinstance(records, dict) and 'last_update' in records:
+                    if records['last_update'] < cutoff:
+                        return []
             
             return records
             
@@ -269,7 +306,12 @@ class IPRecorder:
                 'total_ips': len(self.history),
                 'bad_ips': len(self.bad_ips),
                 'recent_tests': 0,
-                'success_rate': 0
+                'success_rate': 0,
+                'http_performance': {
+                    'ALIYUN': {'success': 0, 'total': 0},
+                    'BAIDU': {'success': 0, 'total': 0},
+                    'GOOGLE': {'success': 0, 'total': 0}
+                }
             }
             
             # 计算最近24小时的测试统计
@@ -278,17 +320,33 @@ class IPRecorder:
             total_count = 0
             
             for ip, records in self.history.items():
-                recent_records = [r for r in records if r['timestamp'] > cutoff]
-                total_count += len(recent_records)
-                
-                for record in recent_records:
-                    if any(test.get('available', False) for test in record['tests'].values()):
-                        success_count += 1
+                if isinstance(records, list):
+                    for record in records:
+                        if record['timestamp'] > cutoff:
+                            total_count += 1
+                            
+                            # 检查ping测试成功率
+                            if any(test.get('available', False) for test in record['tests'].values()):
+                                success_count += 1
+                            
+                            # 检查HTTP测试成功率
+                            if 'http_tests' in record:
+                                for dns_type, result in record['http_tests'].items():
+                                    if dns_type in stats['http_performance']:
+                                        stats['http_performance'][dns_type]['total'] += 1
+                                        if result.get('available', False):
+                                            stats['http_performance'][dns_type]['success'] += 1
             
             stats['recent_tests'] = total_count
             if total_count > 0:
                 stats['success_rate'] = (success_count / total_count) * 100
                 
+                # 计算每个DNS的成功率
+                for dns_type in stats['http_performance']:
+                    dns_stats = stats['http_performance'][dns_type]
+                    if dns_stats['total'] > 0:
+                        dns_stats['success_rate'] = (dns_stats['success'] / dns_stats['total']) * 100
+            
             return stats
             
         except Exception as e:

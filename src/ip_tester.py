@@ -12,6 +12,8 @@ from datetime import datetime
 import random
 from typing import Dict, List
 
+from src.http_tester import HTTPTester
+
 class IPTester:
     def __init__(self, config: Dict):
         self.config = config
@@ -82,32 +84,41 @@ class IPTester:
         return results
 
     async def test_ip(self, ip: str) -> Dict:
+        """测试单个IP的各项性能"""
         results = {
             'ip': ip,
             'status': 'ok', 
-            'tests': {}
+            'tests': {},
+            'http_test': None  # 新增HTTP测试结果
         }
         
         # 获取测试节点
         test_nodes = self.get_test_nodes(ip)
         
-        # 顺序测试每个ISP的节点
+        # 进行ping测试
         for isp, nodes in test_nodes.items():
             for node_id in nodes:
-                self.logger.info(f"Testing IP {ip} with {isp} node {node_id}")
+                self.logger.info(f"Ping测试 IP {ip} 使用 {isp} 节点 {node_id}")
                 try:
                     result = await self.test_single_ip(ip, node_id)
                     if result.get('available', False):
-                        # 修改这里，添加延迟信息的输出
                         self.logger.info(f"IP {ip} - {isp} node {node_id} - Latency: {result['latency']}ms")
                         if isp not in results['tests'] or \
                         results['tests'][isp].get('latency', float('inf')) > result.get('latency', float('inf')):
                             results['tests'][isp] = result
                     else:
-                        # 添加不可用信息的输出
                         self.logger.info(f"IP {ip} - {isp} node {node_id} - Unavailable")
                 except Exception as e:
                     self.logger.error(f"Error testing IP {ip} with {isp}: {str(e)}")
+        
+        # 进行HTTP测试
+        try:
+            http_tester = HTTPTester(self.config)
+            http_result = await http_tester.test_ip(ip)
+            results['http_test'] = http_result
+        except Exception as e:
+            self.logger.error(f"HTTP测试失败 {ip}: {str(e)}")
+            results['http_test'] = {'available': False, 'error': str(e)}
         
         return results
 
@@ -141,8 +152,8 @@ class IPTester:
                 response = await asyncio.wait_for(
                     asyncio.get_event_loop().run_in_executor(None, 
                         lambda: self.session.get('https://www.itdog.cn/batch_ping/', 
-                                            headers=headers, timeout=2)),  # 超时改为2秒
-                    timeout=2  # 总超时也改为2秒
+                                            headers=headers, timeout=2)),
+                    timeout=2
                 )
                 if response.status_code != 200:
                     return self._failed_result(node_id)
@@ -157,7 +168,6 @@ class IPTester:
                         'check_mode': 'ping'
                     }
 
-                    # 缩短POST请求超时
                     response = await asyncio.wait_for(
                         asyncio.get_event_loop().run_in_executor(None, 
                             lambda: self.session.post('https://www.itdog.cn/batch_ping/', 
@@ -169,7 +179,6 @@ class IPTester:
                         guardret = self._set_ret(self.session.cookies['guard'])
                         self.session.cookies.set('guardret', guardret)
 
-                    # 缩短第二次POST超时
                     response = await asyncio.wait_for(
                         asyncio.get_event_loop().run_in_executor(None, 
                             lambda: self.session.post('https://www.itdog.cn/batch_ping/', 

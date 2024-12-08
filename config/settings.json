@@ -6,30 +6,105 @@
     "retry_delay": 0,
     "nodes_per_test": 1,
     "sample_rate": 0.0002,
-    "sample_size": 180,
-    "overseas_mode": true
+    "sample_size": 1,
+    "overseas_mode": true,
+    "concurrent_limit": 1
   },
+
+  "http_test": {
+    "timeout": 5,
+    "retry_count": 1,
+    "concurrent_limit": 1,
+    "dns_servers": {
+      "ALIYUN": "223.5.5.5",
+      "BAIDU": "180.76.76.76",
+      "GOOGLE": "8.8.8.8"
+    }
+  },
+
   "evaluation": {
-    "telecom_latency_threshold": 120,
-    "unicom_latency_threshold": 120,
-    "mobile_latency_threshold": 120,
-    "overseas_latency_threshold": 120,
-    "default_latency_threshold": 150,
-    "stability_threshold": 100,
-    "overseas_stability_threshold": 50,
+    "latency_thresholds": {
+      "telecom_latency_threshold": 500,
+      "unicom_latency_threshold": 500,
+      "mobile_latency_threshold": 500,
+      "overseas_latency_threshold": 500,
+      "default_latency_threshold": 500
+    },
+
+    "http_thresholds": {
+      "ttfb_threshold": 500,
+      "total_time_threshold": 2000,
+      "success_rate": 0.1
+    },
+
+    "stability_thresholds": {
+      "domestic": 50,
+      "overseas": 80
+    },
+
+    "weights": {
+      "ping": {
+        "latency": 0.4,
+        "loss": 0.2,
+        "stability": 0.2
+      },
+      "http": {
+        "ttfb": 0.1,
+        "total_time": 0.1
+      }
+    },
+    
+    "isp_weights": {
+      "TELECOM": 0.35,
+      "UNICOM": 0.25,
+      "MOBILE": 0.25,
+      "OVERSEAS": 0.15
+    },
+
     "min_success_rate": 0.5,
     "max_loss_rate": 50,
     "min_tests_for_bad_ip": 5,
     "bad_ip_threshold": 0.9
   },
+
+  "validation": {
+    "success_ratio": 0.8,
+    "http_success_ratio": 0.7,
+    "test_timeout": 2,
+    "retry_count": 1,
+    "concurrent_limit": 1
+  },
+
   "recorder": {
     "results_dir": "results",
     "max_history_days": 30,
     "save_interval": 10
   },
+
+  "analyzer": {
+    "analysis_days": 7,
+    "min_samples": 5,
+    "history_weight": 0.3,
+    "dns_weights": {
+      "domestic": {
+        "ALIYUN": 0.5,
+        "BAIDU": 0.5
+      },
+      "overseas": {
+        "GOOGLE": 1.0
+      }
+    }
+  },
+
   "dns": {
     "default_ttl": 600,
-    "max_records_per_line": 2,
+    "max_records_per_line": {
+      "DEFAULT": 1,
+      "TELECOM": 2,
+      "UNICOM": 2,
+      "MOBILE": 2,
+      "OVERSEAS": 1
+    },
     "providers": {
       "dnspod": {
         "enabled": false,
@@ -50,6 +125,7 @@
       }
     }
   },
+
   "domains": {
     "default": {
       "domain": "",
@@ -62,20 +138,5 @@
         "DEFAULT"
       ]
     }
-  },
-  "regions": [
-    "EAST",
-    "SOUTH",
-    "NORTH",
-    "CENTRAL",
-    "SOUTHWEST",
-    "NORTHWEST",
-    "NORTHEAST"
-  ],
-  "isps": [
-    "CHINA_TELECOM",
-    "CHINA_UNICOM",
-    "CHINA_MOBILE",
-    "OVERSEAS"
-  ]
+  }
 }

@@ -7,6 +7,7 @@ from typing import Dict, List
 from pathlib import Path
 from datetime import datetime
 from src.ip_tester import IPTester
+from src.ip_validator import IPValidator
 from src.core.evaluator import IPEvaluator
 from src.core.recorder import IPRecorder
 from src.core.analyzer import IPHistoryAnalyzer
@@ -189,11 +190,11 @@ async def main():
     )
     
     logger = logging.getLogger('main')
-    logger.info("Starting IP test and DNS update process")
+    logger.info("开始IP测试和DNS更新流程")
     
     try:
+        # 加载配置
         config = load_config()
-        
         logger.info("加载配置...")
         logger.info(f"域名配置: {config['domains']}")
         
@@ -201,34 +202,24 @@ async def main():
         sub_domain = config['domains']['default']['subdomain']
         logger.info(f"即将更新域名: {domain}, 子域名: {sub_domain}")
         
-        # 测试DNS连接
-        dns_client = init_dns_client(config)
-        test_result = dns_client.get_record(domain, 1, "", "A")
-        logger.info(f"DNS连接测试结果: {test_result}")
-        logger.info("加载配置...")
-        logger.info(f"域名配置: {config['domains']}")
-        
-        domain = config['domains']['default']['domain']
-        sub_domain = config['domains']['default']['subdomain']
-        logger.info(f"即将更新域名: {domain}, 子域名: {sub_domain}")
-        
-        # 测试DNS连接
+        # 初始化DNS客户端并测试连接
         dns_client = init_dns_client(config)
         test_result = dns_client.get_record(domain, 1, "", "A")
         logger.info(f"DNS连接测试结果: {test_result}")
         
+        # 生成IP列表
         ip_list = generate_ip_list(config)
-        
         if not ip_list:
             logger.error("没有可测试的IP")
             return
             
+        # 初始化各个组件
         ip_tester = IPTester(config)
         evaluator = IPEvaluator(config)
         recorder = IPRecorder(config)
-        dns_client = init_dns_client(config)
         analyzer = IPHistoryAnalyzer(config)
-
+        validator = IPValidator(config)  # 新增验证器
+        
         # 获取当前DNS记录中的IP
         current_ips = {
             'TELECOM': [],
@@ -237,10 +228,6 @@ async def main():
             'OVERSEAS': [],
             'DEFAULT': []
         }
-        
-        # 获取域名配置
-        domain = config['domains']['default']['domain']
-        sub_domain = config['domains']['default']['subdomain']
         
         # 获取当前DNS记录
         records = dns_client.get_record(domain, 100, sub_domain, "A")
@@ -271,13 +258,21 @@ async def main():
         # 评估测试结果
         logger.info("评估测试结果...")
         evaluations = evaluator.evaluate_batch(test_results)
-        logger.info("评估结果:")
+        logger.info("初步评估结果:")
         for isp, ips in evaluations.items():
             logger.info(f"{isp}: {len(ips)} 个IP")
             for ip_data in ips:
                 logger.info(f"  IP: {ip_data['ip']}, 延迟: {ip_data['latency']}ms")
         
-        # 保存测试结果
+        # 多节点验证
+        logger.info("开始多节点验证...")
+        validated_evaluations = await validator.batch_validate(evaluations)
+        logger.info("验证后的结果:")
+        for isp, ips in validated_evaluations.items():
+            logger.info(f"{isp}: {len(ips)} 个IP")
+            for ip_data in ips:
+                logger.info(f"  IP: {ip_data['ip']}, 延迟: {ip_data['latency']}ms")
+        
         logger.info("保存测试结果...")
         recorder.save_test_results(test_results)
         analyzer.save_history(test_results)
@@ -286,17 +281,17 @@ async def main():
         logger.info("分析历史数据...")
         best_ips = await analyzer.analyze_and_update(
             current_ips=current_ips,
-            new_test_results=evaluations
+            new_test_results=validated_evaluations  # 使用验证后的结果
         )
         
         logger.info("更新DNS记录...")
         # 更新DNS记录
         await update_dns_records(dns_client, config, best_ips)
 
-        logger.info("Process completed successfully")
+        logger.info("所有流程已成功完成")
         
     except Exception as e:
-        logger.error(f"Process failed: {str(e)}")
+        logger.error(f"流程执行失败: {str(e)}")
         raise
 
 if __name__ == "__main__":
