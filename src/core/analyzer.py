@@ -117,7 +117,7 @@ class IPHistoryAnalyzer:
 
             # 计算得分
             latency_score = 1000 / latency if latency > 0 else 0
-            stability_bonus = min(100, update_count * 10)
+            stability_bonus = min(10, update_count * 1)
             final_score = latency_score + stability_bonus
             
             self.logger.info(f"IP {ip} {isp} 线路得分计算:")
