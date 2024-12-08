@@ -80,7 +80,6 @@ class HTTPTester:
                 while True:
                     try:
                         msg = await asyncio.wait_for(websocket.recv(), timeout=5)
-                        self.logger.info(f"收到WebSocket消息: {msg}")
                         
                         data = json.loads(msg)
                         

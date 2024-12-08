@@ -85,6 +85,8 @@ class IPTester:
 
     async def test_ip(self, ip: str) -> Dict:
         """测试单个IP的各项性能"""
+        self.logger.info(f"\n开始测试 IP: {ip}")
+        
         results = {
             'ip': ip,
             'status': 'ok', 
@@ -94,32 +96,42 @@ class IPTester:
         
         # 获取测试节点
         test_nodes = self.get_test_nodes(ip)
+        self.logger.info(f"获取到测试节点: {test_nodes}")
         
         # 进行ping测试
         for isp, nodes in test_nodes.items():
+            self.logger.info(f"\n测试 {isp} 线路:")
             for node_id in nodes:
                 self.logger.info(f"Ping测试 IP {ip} 使用 {isp} 节点 {node_id}")
                 try:
                     result = await self.test_single_ip(ip, node_id)
                     if result.get('available', False):
-                        self.logger.info(f"IP {ip} - {isp} node {node_id} - Latency: {result['latency']}ms")
+                        self.logger.info(f"IP {ip} - {isp} node {node_id} - "
+                                    f"延迟: {result['latency']}ms, "
+                                    f"丢包率: {result.get('loss', 0)}%")
                         if isp not in results['tests'] or \
                         results['tests'][isp].get('latency', float('inf')) > result.get('latency', float('inf')):
                             results['tests'][isp] = result
+                            self.logger.info(f"更新 {isp} 最佳结果 - 延迟: {result['latency']}ms")
                     else:
-                        self.logger.info(f"IP {ip} - {isp} node {node_id} - Unavailable")
+                        self.logger.info(f"IP {ip} - {isp} node {node_id} - 测试不可用")
                 except Exception as e:
                     self.logger.error(f"Error testing IP {ip} with {isp}: {str(e)}")
         
+        self.logger.info(f"\nPing测试结果汇总: {results['tests']}")
+        
         # 进行HTTP测试
+        self.logger.info(f"\n开始HTTP测试 IP: {ip}")
         try:
             http_tester = HTTPTester(self.config)
             http_result = await http_tester.test_ip(ip)
             results['http_test'] = http_result
+            self.logger.info(f"HTTP测试结果: {http_result}")
         except Exception as e:
             self.logger.error(f"HTTP测试失败 {ip}: {str(e)}")
             results['http_test'] = {'available': False, 'error': str(e)}
         
+        self.logger.info(f"\n最终测试结果: {results}")
         return results
 
     def _x(self, input_str: str, key: str) -> str:

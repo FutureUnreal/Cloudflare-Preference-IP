@@ -180,11 +180,15 @@ class IPEvaluator:
 
     def _calculate_http_score(self, http_result: Dict, isp: str) -> float:
         """计算HTTP测试得分"""
+        self.logger.info(f"\n计算 {isp} 的HTTP得分:")
+        self.logger.info(f"HTTP测试结果: {http_result}")
+        
         if not http_result or not http_result.get('available', False):
+            self.logger.info("HTTP测试结果为空或不可用")
             return 0
             
-        # 获取相应的DNS测试结果
         results = http_result.get('results', {})
+        self.logger.info(f"DNS测试结果详情: {results}")
         
         # 根据ISP选择合适的DNS测试结果
         if isp in ['TELECOM', 'UNICOM', 'MOBILE']:
@@ -195,27 +199,35 @@ class IPEvaluator:
             
             if aliyun_result.get('available', False):
                 valid_results.append(aliyun_result)
+                self.logger.info(f"阿里DNS结果可用: {aliyun_result}")
             if baidu_result.get('available', False):
                 valid_results.append(baidu_result)
+                self.logger.info(f"百度DNS结果可用: {baidu_result}")
                 
             if not valid_results:
+                self.logger.info("没有可用的国内DNS测试结果")
                 return 0
                 
             # 使用延迟最低的结果
             test_result = min(valid_results, key=lambda x: x.get('ttfb', float('inf')))
+            self.logger.info(f"选择最佳结果: {test_result}")
         
         elif isp == 'OVERSEAS':
             # 境外线路使用谷歌DNS的结果
             test_result = results.get('GOOGLE', {})
+            self.logger.info(f"谷歌DNS结果: {test_result}")
             if not test_result.get('available', False):
+                self.logger.info("谷歌DNS测试不可用")
                 return 0
         
         else:  # DEFAULT
             # 默认线路使用所有DNS中最好的结果
             valid_results = [r for r in results.values() if r.get('available', False)]
             if not valid_results:
+                self.logger.info("没有可用的DNS测试结果")
                 return 0
             test_result = min(valid_results, key=lambda x: x.get('ttfb', float('inf')))
+            self.logger.info(f"DEFAULT线路选择最佳结果: {test_result}")
         
         # 计算得分
         ttfb = test_result.get('ttfb', float('inf'))
@@ -224,8 +236,14 @@ class IPEvaluator:
         total_time = test_result.get('total_time', float('inf'))
         time_score = max(0, 100 - (total_time / self.http_thresholds['total_time']) * 100)
         
-        return (ttfb_score * self.weights['http']['ttfb'] +
+        final_score = (ttfb_score * self.weights['http']['ttfb'] +
                 time_score * self.weights['http']['total_time'])
+                
+        self.logger.info(f"TTFB: {ttfb}ms, 得分: {ttfb_score:.2f}")
+        self.logger.info(f"Total Time: {total_time}ms, 得分: {time_score:.2f}")
+        self.logger.info(f"最终HTTP得分: {final_score:.2f}")
+        
+        return final_score
 
     def _calculate_penalties(self, test_result: Dict) -> float:
         """计算惩罚因子"""
