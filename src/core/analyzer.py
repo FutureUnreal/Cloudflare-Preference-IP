@@ -217,11 +217,13 @@ class IPHistoryAnalyzer:
             # 获取该DNS服务器的所有测试结果
             for url, ttfb in http_performance['ttfb'].items():
                 if url.startswith(dns_type):
-                    ttfb_values.append(ttfb)
+                    # 转换为毫秒
+                    ttfb_values.append(ttfb * 1000)
                     
             for url, total_time in http_performance['total_time'].items():
                 if url.startswith(dns_type):
-                    total_time_values.append(total_time)
+                    # 转换为毫秒
+                    total_time_values.append(total_time * 1000)
             
             if not ttfb_values or not total_time_values:
                 return 0
@@ -230,12 +232,12 @@ class IPHistoryAnalyzer:
             avg_ttfb = statistics.mean(ttfb_values)
             avg_total_time = statistics.mean(total_time_values)
             
-            # 计算得分
-            ttfb_score = 1000 / avg_ttfb if avg_ttfb > 0 else 0
-            time_score = 1000 / avg_total_time if avg_total_time > 0 else 0
+            # 使用类似延迟得分的计算方式
+            ttfb_score = max(0, 100 - (avg_ttfb / self.http_thresholds['ttfb']) * 100)
+            time_score = max(0, 100 - (avg_total_time / self.http_thresholds['total_time']) * 100)
             
             return (ttfb_score + time_score) / 2
-            
+                
         except Exception as e:
             self.logger.error(f"计算DNS {dns_type} HTTP得分失败: {str(e)}")
             return 0

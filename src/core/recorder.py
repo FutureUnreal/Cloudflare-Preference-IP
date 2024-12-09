@@ -125,10 +125,11 @@ class IPRecorder:
         except Exception as e:
             self.logger.error(f"更新不良IP记录失败 {ip}: {str(e)}")
 
-    def save_test_results(self, results: List[Dict]):
+    def save_test_results(self, results: List[Dict], timestamp: str = None):
         """保存测试结果"""
         try:
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            if timestamp is None:
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             
             # 保存带时间戳的结果和最新结果
             result_files = [

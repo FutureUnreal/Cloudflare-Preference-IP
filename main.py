@@ -179,6 +179,7 @@ async def update_dns_records(dns_client, config: Dict, best_ips: Dict):
 async def main():
     log_dir = Path('logs')
     log_dir.mkdir(exist_ok=True)
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
     logging.basicConfig(
         level=logging.INFO,
@@ -273,7 +274,7 @@ async def main():
                 logger.info(f"  IP: {ip_data['ip']}, 延迟: {ip_data['latency']}ms")
         
         logger.info("保存测试结果...")
-        recorder.save_test_results(test_results)
+        recorder.save_test_results(test_results, timestamp)
         analyzer.save_history(test_results)
         
         # 分析历史数据
@@ -288,6 +289,15 @@ async def main():
         await update_dns_records(dns_client, config, best_ips)
 
         logger.info("所有流程已成功完成")
+
+        try:
+            results_dir = Path(config.get('results_dir', 'results'))
+            temp_file = results_dir / f'test_results_{timestamp}.json'
+            if temp_file.exists():
+                temp_file.unlink()
+                logger.info(f"已删除临时文件: {temp_file.name}")
+        except Exception as e:
+            logger.error(f"清理临时文件失败: {str(e)}")
         
     except Exception as e:
         logger.error(f"流程执行失败: {str(e)}")
