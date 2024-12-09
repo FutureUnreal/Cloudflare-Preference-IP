@@ -206,7 +206,6 @@ class IPRecorder:
             with open(final_file, 'w') as f:
                 json.dump(result_data, f, indent=2)
             
-            # 保存最新版本
             with open(self.results_dir / 'final_results_latest.json', 'w') as f:
                 json.dump(result_data, f, indent=2)
                 

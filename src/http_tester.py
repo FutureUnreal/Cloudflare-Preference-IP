@@ -111,7 +111,6 @@ class HTTPTester:
                     result['available'] = True
                     result['ttfb'] = best_result['ttfb']
                     result['total_time'] = best_result['total_time']
-                    self.logger.info(f"使用最佳测试结果: TTFB={result['ttfb']}, TotalTime={result['total_time']}")
                     
         except Exception as e:
             result['error'] = str(e)

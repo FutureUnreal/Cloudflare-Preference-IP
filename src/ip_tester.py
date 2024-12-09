@@ -117,8 +117,6 @@ class IPTester:
                 except Exception as e:
                     self.logger.error(f"Error testing IP {ip} with {isp}: {str(e)}")
         
-        self.logger.info(f"\nPing测试结果汇总: {results['tests']}")
-        
         # 进行HTTP测试
         self.logger.info(f"\n开始HTTP测试 IP: {ip}")
         try:
@@ -129,7 +127,6 @@ class IPTester:
             self.logger.error(f"HTTP测试失败 {ip}: {str(e)}")
             results['http_test'] = {'available': False, 'error': str(e)}
         
-        self.logger.info(f"\n最终测试结果: {results}")
         return results
 
     def _x(self, input_str: str, key: str) -> str:
