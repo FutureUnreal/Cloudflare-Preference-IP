@@ -3,9 +3,12 @@ on:
   schedule:
     - cron: '0 */5 * * *'  # 每5小时运行一次
   workflow_dispatch:  # 允许手动触发
+
 jobs:
   update-dns:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     
     steps:
       - uses: actions/checkout@v3
@@ -56,6 +59,13 @@ jobs:
         run: |
           python main.py
           
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add results/*.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update DNS test results [skip ci]" && git push)
+          
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
@@ -63,4 +73,3 @@ jobs:
           name: test-results
           path: |
             results/*.json
-            logs/*.log

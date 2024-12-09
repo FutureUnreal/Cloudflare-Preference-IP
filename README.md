@@ -2,19 +2,31 @@
 
 [![DNS Update](https://github.com/FutureUnreal/Cloudflare-Preference-IP/actions/workflows/dns-update.yml/badge.svg)](https://github.com/FutureUnreal/Cloudflare-Preference-IP/actions/workflows/dns-update.yml)
 
-自动测试和优化 Cloudflare IP 的工具。使用来自不同中国运营商的 ITDOG 测速节点对 Cloudflare Anycast IP 进行网络质量测试，并自动更新 DNS 记录为最优 IP。
+自动测试和优化 Cloudflare IP 的工具。使用多维度评估系统对 Cloudflare Anycast IP 进行网络质量测试，并自动更新 DNS 记录为最优 IP。
 
 [English](./README_EN.md) | [简体中文](./README.md)
 
 ## ✨ 特性
 
-- 🚀 使用 ITDOG 节点自动测试 Cloudflare IP 质量
-- 📊 支持电信、联通、移动及海外多个区域的延迟测试
-- 🔄 自动更新 DNS 记录（支持阿里云、DNSPod、华为云）
-- ⚡ 智能 IP 质量评估和筛选系统
-- 🔍 完整的测试日志和历史记录追踪
-- 🤖 支持 GitHub Actions 自动化运行
-- 📈 IP 历史数据分析和增量优化更新
+- 🌐 多维度网络质量评估
+  - Ping延迟、丢包率测试
+  - HTTP性能(TTFB、总加载时间)分析
+  - 多DNS服务商验证(阿里云、百度、谷歌)
+  
+- 📊 智能评分系统
+  - 延迟权重: 60%
+  - HTTP性能权重: 30% 
+  - 稳定性权重: 10%
+  
+- 🔄 增量优化更新策略
+  - 保持当前高分IP稳定性
+  - 持续引入新的优质IP
+  - 自动淘汰表现差的IP
+  
+- 🛡️ 多重验证机制
+  - 多节点交叉验证
+  - HTTP性能多DNS验证
+  - 历史数据持续评估
 
 ## 🚀 快速开始
 
@@ -62,7 +74,7 @@ pip install -r requirements.txt
 # 进入 Python 包目录
 cd .venv/lib/python3.12/site-packages/aliyunsdkcore
 
-# 替换 [six.py](https://raw.githubusercontent.com/benjaminp/six/1.16.0/six.py) 文件到以下两个位置：
+# 替换 six.py 文件到以下两个位置：
 # - aliyunsdkcore/vendored/six.py
 # - vendored/requests/packages/urllib3/packages/six.py
 ```
@@ -105,6 +117,17 @@ python main.py
     "overseas_mode": true      // 是否测试境外线路
   },
   
+  "evaluation": {
+    "latency_thresholds": {
+      "telecom_latency_threshold": 100,  // 电信延迟阈值(ms)  
+      "unicom_latency_threshold": 100,   // 联通延迟阈值
+      "mobile_latency_threshold": 100,   // 移动延迟阈值
+      "overseas_latency_threshold": 150  // 海外延迟阈值
+    },
+    "http_ttfb_threshold": 200,         // HTTP首字节时间阈值(ms)
+    "http_total_time_threshold": 1000    // HTTP总加载时间阈值(ms)
+  },
+  
   "dns": {
     "providers": {
       "aliyun": {
@@ -115,17 +138,21 @@ python main.py
       }
       // 其他DNS服务商配置类似
     },
-    "max_records_per_line": 2,  // 每个线路保留的IP数量
+    "max_records_per_line": {   // 每个线路保留的IP数量
+      "TELECOM": 2,  // 电信2条记录
+      "UNICOM": 2,   // 联通2条记录
+      "MOBILE": 2,   // 移动2条记录
+      "OVERSEAS": 1, // 境外1条记录
+      "DEFAULT": 1   // 默认1条记录
+    },
     "default_ttl": 600         // DNS记录TTL值
   },
   
-  {
   "domains": {
-  "default": {
-    "domain": "",              // 可选，默认从环境变量获取
-    "subdomain": "",           // 可选，默认从环境变量获取
-    "lines": ["CM", "CU", "CT", "AB"]
-      }
+    "default": {
+      "domain": "",              // 可选，默认从环境变量获取
+      "subdomain": "",           // 可选，默认从环境变量获取
+      "lines": ["CM", "CU", "CT", "AB"]  // 运营商线路配置
     }
   }
 }
@@ -133,41 +160,66 @@ python main.py
 
 ## 🔄 IP 优选策略
 
-工具通过多维度分析选择最优 IP：
-- 延迟测试：测试 IP 对各运营商节点的响应时间
-- 稳定性评估：分析 IP 的延迟波动情况
-- 可用性监测：跟踪 IP 的连接成功率
-- 历史表现：记录并分析 IP 30天内的表现
-- 智能更新：
-  - 保留表现稳定的优质 IP
-  - 持续发现和引入新的优质 IP
-  - 自动淘汰表现差的 IP
+1. 初步筛选:
+- Ping延迟低于阈值
+- HTTP性能达标
+- 稳定性符合要求
+
+2. 多维度评分:
+- 延迟得分(占比60%)
+- HTTP性能得分(占比30%)
+- 稳定性得分(占比10%)
+
+3. 智能更新机制:
+- 保留高分IP以维持稳定性
+- 定期引入新的优质IP
+- 历史表现作为重要参考
+- 自动淘汰低质量IP
 
 ## 📊 测试结果
 
-每次运行后可查看：
-- `results/test_results_latest.json`: 最新测试数据
-- `results/final_results_latest.json`: 最终分析结果
-- `logs/`: 详细运行日志
+- test_results_latest.json:
+  - 原始测试数据
+  - 包含Ping和HTTP测试结果
+  
+- final_results_latest.json:
+  - 最终分析结果 
+  - 包含每个ISP最优IP
+  - 详细的性能统计数据
+  
+- ip_history.json:
+  - IP历史表现记录
+  - 30天滚动数据
 
 ## 🌟 测试节点
 
 使用 ITDOG 提供的以下运营商节点：
 
-- 中国电信：
-  - 全国多个省份优质节点
-  - 覆盖主要城市和地区
+- 中国电信：覆盖全国主要省份节点
+- 中国联通：覆盖全国范围测试节点
+- 中国移动：覆盖主要城市节点
+- 海外节点（可选）：香港、新加坡、日本等
 
-- 中国联通：
-  - 全国范围的测试节点
-  - 包括一二线城市
+## ⚠️ 免责声明
 
-- 中国移动：
-  - 覆盖全国的测速节点
-  - 包括各省主要城市
+1. 本项目仅供学习和技术研究使用，不鼓励用于商业用途
+2. 使用本项目导致的任何网络问题或主机问题，与本项目无关
+3. 若使用本项目导致任何损失，由使用者自行承担后果
+4. 本项目不保证测试结果的准确性和可用性
+5. 本项目涉及的所有测速功能均通过模拟浏览器行为实现，请合理使用，避免对测速节点造成压力
+6. 使用本项目时请遵守 ITDOG 网站的使用条款和规则
+7. 请遵守当地法律法规，不得用于非法用途
 
-- 海外节点（可选）：
-  - 香港、新加坡、日本等地区
+如果当前 DNS 有移动、联通、电信线路的解析，执行后将会被覆盖。
+
+## 致谢
+
+本项目基于以下开源项目开发：
+
+- [ddgth/cf2dns](https://github.com/ddgth/cf2dns) - 提供了 Cloudflare IP 优选和 DNS 自动切换的核心思路
+- [wojiaoyishang/itdog-batch-ping](https://github.com/wojiaoyishang/itdog-batch-ping) - 提供了 ITDOG 节点测速的技术实现
+
+感谢以上项目作者的开源贡献！
 
 ## 📃 许可证
 
