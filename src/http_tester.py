@@ -71,7 +71,7 @@ class HTTPTester:
             'error': None
         }
         
-        retries = 3  # 添加重试次数
+        retries = 3
         for attempt in range(retries):
             try:
                 self.logger.info(f"尝试 WebSocket 连接 (尝试 {attempt + 1}/{retries})")
@@ -87,12 +87,18 @@ class HTTPTester:
                     }))
                     
                     best_result = None
+                    message_count = 0  # 添加消息计数
+                    
                     while True:
                         try:
                             msg = await asyncio.wait_for(websocket.recv(), timeout=5)
+                            message_count += 1  # 增加消息计数
+                            self.logger.info(f"收到WebSocket消息 #{message_count}: {msg}")  # 记录每条消息
+                            
                             data = json.loads(msg)
                             
                             if data.get('type') == 'finished':
+                                self.logger.info("收到完成信号")
                                 break
                                 
                             if data.get('type') == 'success':
@@ -107,24 +113,26 @@ class HTTPTester:
                                             'http_code': http_code,
                                             'head': data.get('head', '')
                                         }
+                                        self.logger.info(f"更新最佳结果: {best_result}")
+                        
                         except asyncio.TimeoutError:
-                            self.logger.warning("WebSocket 接收超时")
+                            self.logger.warning(f"WebSocket接收超时，已收到 {message_count} 条消息")
                             break
                     
                     if best_result and best_result['all_time'] < float('inf'):
                         result['available'] = True
                         result['ttfb'] = best_result['ttfb']
                         result['total_time'] = best_result['total_time']
+                        self.logger.info(f"测试完成，最终结果: {result}")
                         return result
                         
             except Exception as e:
-                self.logger.error(f"WebSocket 连接失败 (尝试 {attempt + 1}/{retries}): {str(e)}")
+                self.logger.error(f"WebSocket连接失败 (尝试 {attempt + 1}/{retries}): {str(e)}")
                 if attempt < retries - 1:
-                    await asyncio.sleep(1)  # 重试前等待
+                    await asyncio.sleep(1)
                 else:
                     result['error'] = str(e)
         
-        self.logger.error(f"WebSocket 连接在 {retries} 次尝试后失败")
         return result
 
     async def test_single_ip_with_dns(self, ip: str, dns_type: str, dns_server: str) -> Dict:
