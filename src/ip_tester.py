@@ -96,6 +96,7 @@ class IPTester:
         
         # 获取测试节点
         test_nodes = self.get_test_nodes(ip)
+        any_ping_success = False
         self.logger.info(f"获取到测试节点: {test_nodes}")
         
         # 进行ping测试
@@ -106,6 +107,7 @@ class IPTester:
                 try:
                     result = await self.test_single_ip(ip, node_id)
                     if result.get('available', False):
+                        any_ping_success = True
                         self.logger.info(f"IP {ip} - {isp} node {node_id} - "
                                     f"延迟: {result['latency']}ms, "
                                     f"丢包率: {result.get('loss', 0)}%")
@@ -118,14 +120,18 @@ class IPTester:
                     self.logger.error(f"Error testing IP {ip} with {isp}: {str(e)}")
         
         # 进行HTTP测试
-        self.logger.info(f"\n开始HTTP测试 IP: {ip}")
-        try:
-            http_tester = HTTPTester(self.config)
-            http_result = await http_tester.test_ip(ip)
-            results['http_test'] = http_result
-        except Exception as e:
-            self.logger.error(f"HTTP测试失败 {ip}: {str(e)}")
-            results['http_test'] = {'available': False, 'error': str(e)}
+        if any_ping_success:
+            self.logger.info(f"\n开始HTTP测试 IP: {ip}")
+            try:
+                http_tester = HTTPTester(self.config)
+                http_result = await http_tester.test_ip(ip)
+                results['http_test'] = http_result
+            except Exception as e:
+                self.logger.error(f"HTTP测试失败 {ip}: {str(e)}")
+                results['http_test'] = {'available': False, 'error': str(e)}
+                
+        else:
+            results['http_test'] = {'available': False, 'error': 'All ping tests failed'}
         
         return results
 
