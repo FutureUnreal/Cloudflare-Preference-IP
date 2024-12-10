@@ -71,7 +71,7 @@ class HTTPTester:
             'error': None
         }
         
-        for attempt in range(2):  # 最多执行两次（初次 + 一次重试）
+        for attempt in range(2):  
             try:
                 async with websockets.connect(
                     wss_url,
@@ -85,38 +85,42 @@ class HTTPTester:
                     }))
                     
                     best_result = None
+                    received_response = False
                     
                     while True:
                         try:
                             msg = await asyncio.wait_for(websocket.recv(), timeout=5)
                             data = json.loads(msg)
+                            received_response = True
                             
                             if data.get('type') == 'finished':
                                 break
                                 
                             if data.get('type') == 'success':
                                 http_code = int(data.get('http_code', 0))
-                                if http_code == 200:
-                                    current_time = float(data.get('all_time', float('inf')))
-                                    if best_result is None or current_time < best_result['all_time']:
-                                        best_result = {
-                                            'all_time': current_time,
-                                            'ttfb': float(data.get('connect_time', float('inf'))),
-                                            'total_time': current_time,
-                                            'http_code': http_code
-                                        }
+                                current_time = float(data.get('all_time', float('inf')))
+                                if best_result is None or current_time < best_result['all_time']:
+                                    best_result = {
+                                        'all_time': current_time,
+                                        'ttfb': float(data.get('connect_time', float('inf'))),
+                                        'total_time': current_time,
+                                        'http_code': http_code
+                                    }
                         
                         except asyncio.TimeoutError:
                             break
                     
-                    if best_result and best_result['all_time'] < float('inf'):
+                    if not received_response:
+                        continue
+                        
+                    if best_result:
                         result['available'] = True
                         result['ttfb'] = best_result['ttfb']
                         result['total_time'] = best_result['total_time']
                         return result
                         
             except Exception as e:
-                if attempt == 0:  # 只在第一次失败时重试
+                if attempt == 0:
                     await asyncio.sleep(1)
                 else:
                     result['error'] = str(e)
