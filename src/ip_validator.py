@@ -195,11 +195,13 @@ class IPValidator:
             'DEFAULT': []  # 默认线路保持不变
         }
         
+        # 只验证有达标IP的运营商
         for isp, results in evaluations.items():
-            if isp == 'DEFAULT':
+            if isp == 'DEFAULT' or not results:  # 跳过默认线路和空结果
                 validated_results[isp] = results
                 continue
                 
+            self.logger.info(f"开始验证 {isp} 的 {len(results)} 个IP")
             for result in results:
                 ip = result['ip']
                 self.logger.info(f"验证 {isp} IP: {ip}")
@@ -210,5 +212,5 @@ class IPValidator:
                         **result,
                         **validated
                     })
-                    
+                        
         return validated_results

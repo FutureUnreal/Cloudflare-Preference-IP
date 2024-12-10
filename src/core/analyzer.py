@@ -15,6 +15,12 @@ class IPHistoryAnalyzer:
        self.results_dir = Path(config.get('results_dir', 'results'))
        self.analysis_days = config.get('analysis_days', 7)
        self.min_samples = config.get('min_samples', 5)
+
+       eval_config = config.get('evaluation', {})
+       self.http_thresholds = {
+            'ttfb': eval_config.get('http_ttfb_threshold', 200),
+            'total_time': eval_config.get('http_total_time_threshold', 1000)
+       }
         
        # 调试日志
        self.logger.info(f"初始化 IPHistoryAnalyzer:")
