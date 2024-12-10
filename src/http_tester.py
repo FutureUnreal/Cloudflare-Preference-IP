@@ -130,7 +130,6 @@ class HTTPTester:
     async def test_single_ip_with_dns(self, ip: str, dns_type: str, dns_server: str) -> Dict:
         """使用指定DNS服务器测试单个IP的HTTP性能"""
         try:
-            # 更新测试参数
             data = {
                 'line': '',
                 'host': ip,
@@ -145,10 +144,6 @@ class HTTPTester:
                 'dns_server_type': 'isp',
                 'dns_server': ''
             }
-
-            self.logger.info(f"发送请求: POST https://www.itdog.cn/http/")
-            self.logger.info(f"请求参数: {data}")
-            self.logger.info(f"请求头: {self.headers}")
 
             # 首次请求获取guard cookie
             if 'guardret' not in self.session.cookies:
