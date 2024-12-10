@@ -143,15 +143,21 @@ class HTTPTester:
                 'dns_server': dns_server
             }
 
+            self.logger.info(f"发送请求: POST https://www.itdog.cn/http/")
+            self.logger.info(f"请求参数: {data}")
+            self.logger.info(f"请求头: {self.headers}")
+
             # 首次请求获取guard cookie
             if 'guardret' not in self.session.cookies:
-                await asyncio.get_event_loop().run_in_executor(
+                response = await asyncio.get_event_loop().run_in_executor(
                     None,
                     lambda: self.session.post('https://www.itdog.cn/http/',
-                                           headers=self.headers,
-                                           data=data,
-                                           timeout=self.timeout)
+                                        headers=self.headers,
+                                        data=data,
+                                        timeout=self.timeout)
                 )
+                self.logger.info(f"Response status: {response.status_code}")
+                self.logger.info(f"Cookies: {dict(response.cookies)}")
 
             if 'guard' in self.session.cookies:
                 guardret = self._set_ret(self.session.cookies['guard'])
@@ -162,10 +168,11 @@ class HTTPTester:
             response = await asyncio.get_event_loop().run_in_executor(
                 None,
                 lambda: self.session.post('https://www.itdog.cn/http/',
-                                       headers=self.headers,
-                                       data=data,
-                                       timeout=self.timeout)
+                                    headers=self.headers,
+                                    data=data,
+                                    timeout=self.timeout)
             )
+            self.logger.info(f"测试请求响应状态: {response.status_code}")
 
             # 解析WebSocket信息
             content = response.text
@@ -173,7 +180,7 @@ class HTTPTester:
             task_match = re.search(r"""var task_id='(.*)';""", content)
 
             if not wss_match or not task_match:
-                self.logger.error("未找到WebSocket信息")
+                self.logger.error(f"未找到WebSocket信息: {content[:200]}")
                 return {'available': False, 'error': 'WebSocket信息获取失败'}
 
             wss_url = wss_match.group(1)
@@ -182,8 +189,13 @@ class HTTPTester:
                 (task_id + "token_20230313000136kwyktxb0tgspm00yo5").encode()
             ).hexdigest()[8:-8]
 
+            self.logger.info(f"WebSocket URL: {wss_url}")
+            self.logger.info(f"Task ID: {task_id}")
+            self.logger.info(f"Task Token: {task_token}")
+
             # 获取测试结果
             result = await self._get_websocket_data(wss_url, task_id, task_token)
+            self.logger.info(f"测试结果: {result}")
             
             return result
 
