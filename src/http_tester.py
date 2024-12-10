@@ -71,10 +71,8 @@ class HTTPTester:
             'error': None
         }
         
-        retries = 3
-        for attempt in range(retries):
+        for attempt in range(2):  # 最多执行两次（初次 + 一次重试）
             try:
-                self.logger.info(f"尝试 WebSocket 连接 (尝试 {attempt + 1}/{retries})")
                 async with websockets.connect(
                     wss_url,
                     open_timeout=5,
@@ -87,48 +85,38 @@ class HTTPTester:
                     }))
                     
                     best_result = None
-                    message_count = 0  # 添加消息计数
                     
                     while True:
                         try:
                             msg = await asyncio.wait_for(websocket.recv(), timeout=5)
-                            message_count += 1  # 增加消息计数
-                            self.logger.info(f"收到WebSocket消息 #{message_count}: {msg}")  # 记录每条消息
-                            
                             data = json.loads(msg)
                             
                             if data.get('type') == 'finished':
-                                self.logger.info("收到完成信号")
                                 break
                                 
                             if data.get('type') == 'success':
                                 http_code = int(data.get('http_code', 0))
-                                if http_code > 0:
+                                if http_code == 200:
                                     current_time = float(data.get('all_time', float('inf')))
                                     if best_result is None or current_time < best_result['all_time']:
                                         best_result = {
                                             'all_time': current_time,
                                             'ttfb': float(data.get('connect_time', float('inf'))),
                                             'total_time': current_time,
-                                            'http_code': http_code,
-                                            'head': data.get('head', '')
+                                            'http_code': http_code
                                         }
-                                        self.logger.info(f"更新最佳结果: {best_result}")
                         
                         except asyncio.TimeoutError:
-                            self.logger.warning(f"WebSocket接收超时，已收到 {message_count} 条消息")
                             break
                     
                     if best_result and best_result['all_time'] < float('inf'):
                         result['available'] = True
                         result['ttfb'] = best_result['ttfb']
                         result['total_time'] = best_result['total_time']
-                        self.logger.info(f"测试完成，最终结果: {result}")
                         return result
                         
             except Exception as e:
-                self.logger.error(f"WebSocket连接失败 (尝试 {attempt + 1}/{retries}): {str(e)}")
-                if attempt < retries - 1:
+                if attempt == 0:  # 只在第一次失败时重试
                     await asyncio.sleep(1)
                 else:
                     result['error'] = str(e)
