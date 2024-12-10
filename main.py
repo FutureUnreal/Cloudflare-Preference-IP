@@ -291,6 +291,11 @@ async def main():
         logger.info("所有流程已成功完成")
 
         try:
+            # 清理中间结果文件和临时文件
+            for file in Path('results').glob('test_results_intermediate_*.json'):
+                file.unlink()
+                logger.info(f"已删除中间文件: {file.name}")
+                
             results_dir = Path(config.get('results_dir', 'results'))
             temp_file = results_dir / f'test_results_{timestamp}.json'
             if temp_file.exists():
