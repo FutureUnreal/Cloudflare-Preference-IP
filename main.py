@@ -131,38 +131,124 @@ async def update_dns_records(dns_client, config: Dict, best_ips: Dict):
     domain = config['domains']['default']['domain']
     sub_domain = config['domains']['default']['subdomain']
     
-    # 1. 先获取当前所有A记录
     try:
+        # 1. 获取当前DNS记录
         current_records = dns_client.get_record(domain, 100, sub_domain, "A")
+        current_ips = {
+            'TELECOM': [],
+            'UNICOM': [],
+            'MOBILE': [],
+            'OVERSEAS': [],
+            'DEFAULT': []
+        }
+        
+        ip_record_map = {}
+        
         if 'records' in current_records.get('data', {}):
-            # 2. 只删除A记录
             for record in current_records['data']['records']:
-                if record['Type'] == 'A':  # 只删除A记录
-                    try:
-                        logger.info(f"删除记录: {record['id']} ({record['value']}, {record['line']})")
-                        dns_client.delete_record(domain, record['id'])
-                    except Exception as e:
-                        logger.error(f"删除记录失败 {record['id']}: {str(e)}")
-    except Exception as e:
-        logger.error(f"获取当前记录失败: {str(e)}")
-    
-    # 3. 添加新记录，针对不同线路设置不同数量
-    for line in config['domains']['default']['lines']:
-        if line in ['CM', 'CU', 'CT', 'AB', 'DEFAULT']:
-            line_map = {
-                'CM': ('移动', 'MOBILE', 2),     # 移动2条记录
-                'CU': ('联通', 'UNICOM', 2),     # 联通2条记录
-                'CT': ('电信', 'TELECOM', 2),    # 电信2条记录
-                'AB': ('境外', 'OVERSEAS', 1),   # 境外1条记录
-                'DEFAULT': ('默认', 'DEFAULT', 1) # 默认1条记录
-            }
-            dns_line, ip_line, record_count = line_map[line]
-            logger.info(f"处理 {dns_line} 线路，计划添加 {record_count} 条记录")
+                if record['Type'] == 'A':
+                    ip = record['value']
+                    line = record['line']
+                    ip_record_map[ip] = {
+                        'id': record['id'],
+                        'line': line
+                    }
+                    
+                    if line == '电信':
+                        current_ips['TELECOM'].append(ip)
+                    elif line == '联通':
+                        current_ips['UNICOM'].append(ip)
+                    elif line == '移动':
+                        current_ips['MOBILE'].append(ip)
+                    elif line == '境外':
+                        current_ips['OVERSEAS'].append(ip)
+                    elif line == '默认':
+                        current_ips['DEFAULT'].append(ip)
+
+        logger.info(f"Current DNS records: {current_ips}")
+
+        # 2. 评估所有IP
+        analyzer = IPHistoryAnalyzer(config)
+        final_ips = {
+            'TELECOM': [],
+            'UNICOM': [],
+            'MOBILE': [],
+            'OVERSEAS': [],
+            'DEFAULT': []
+        }
+
+        for isp in ['TELECOM', 'UNICOM', 'MOBILE', 'OVERSEAS']:
+            # 合并当前IP和新测试IP
+            candidate_ips = set()
+            if isp in current_ips:
+                candidate_ips.update(current_ips[isp])
+            if isp in best_ips:
+                candidate_ips.update(best_ips[isp])
             
-            if ip_line in best_ips and best_ips[ip_line]:
-                # 只取指定数量的IP
-                selected_ips = best_ips[ip_line][:record_count]
-                for ip in selected_ips:
+            # 计算每个IP的得分
+            ip_scores = {}
+            for ip in candidate_ips:
+                score = await analyzer._calculate_historical_score(ip, isp)
+                if score > 0:
+                    ip_scores[ip] = score
+            
+            # 选择最高分的IP
+            max_records = config['dns']['max_records_per_line'].get(isp, 1)
+            sorted_ips = sorted(ip_scores.items(), key=lambda x: (-x[1], x[0]))
+            final_ips[isp] = [ip for ip, score in sorted_ips[:max_records]]
+            
+            logger.info(f"{isp} final selection: {final_ips[isp]}")
+            
+        # 为DEFAULT线路选择综合表现最好的IP
+        default_scores = {}
+        for isp, ips in final_ips.items():
+            if ips:  # 从每个线路选择最好的IP
+                ip = ips[0]
+                score = await analyzer._calculate_historical_score(ip, 'DEFAULT')
+                if score > 0:
+                    default_scores[ip] = score
+        
+        if default_scores:
+            best_default_ip = max(default_scores.items(), key=lambda x: x[1])[0]
+            final_ips['DEFAULT'] = [best_default_ip]
+
+        # 3. 更新DNS记录
+        if not any(ips for ips in final_ips.values()):
+            logger.warning("没有找到合格的IP，保留现有DNS记录")
+            return
+            
+        # 删除不再使用的记录
+        for ip, record_info in ip_record_map.items():
+            keep_ip = False
+            for isp_ips in final_ips.values():
+                if ip in isp_ips:
+                    keep_ip = True
+                    break
+            
+            if not keep_ip:
+                try:
+                    logger.info(f"删除记录: {record_info['id']} ({ip}, {record_info['line']})")
+                    dns_client.delete_record(domain, record_info['id'])
+                except Exception as e:
+                    logger.error(f"删除记录失败 {record_info['id']}: {str(e)}")
+        
+        # 添加或保留记录
+        line_map = {
+            'TELECOM': '电信',
+            'UNICOM': '联通',
+            'MOBILE': '移动',
+            'OVERSEAS': '境外',
+            'DEFAULT': '默认'
+        }
+        
+        for isp, ips in final_ips.items():
+            dns_line = line_map.get(isp)
+            if dns_line and ips:
+                for ip in ips:
+                    if ip in ip_record_map:
+                        logger.info(f"保留现有记录: {ip} ({dns_line})")
+                        continue
+                        
                     try:
                         result = dns_client.create_record(
                             domain=domain,
@@ -172,9 +258,13 @@ async def update_dns_records(dns_client, config: Dict, best_ips: Dict):
                             line=dns_line,
                             ttl=config['dns']['default_ttl']
                         )
-                        logger.info(f"添加 {dns_line} 记录: {ip}")
+                        logger.info(f"添加新记录: {ip} ({dns_line})")
                     except Exception as e:
                         logger.error(f"添加记录失败: {str(e)}")
+        
+    except Exception as e:
+        logger.error(f"更新DNS记录失败: {str(e)}")
+        raise
 
 async def main():
     log_dir = Path('logs')

@@ -132,7 +132,7 @@ class IPHistoryAnalyzer:
         """计算特定IP在特定线路的历史得分"""
         try:
             if ip not in self.history:
-                self.logger.info(f"IP {ip} 没有历史记录")
+                self.logger.debug(f"IP {ip} 没有历史记录")
                 return 0
 
             record = self.history[ip]
@@ -142,69 +142,74 @@ class IPHistoryAnalyzer:
             # 检查记录是否过期
             days_old = (datetime.now() - last_update).days
             if days_old > self.analysis_days:
-                self.logger.info(f"IP {ip} 的记录已过期 ({days_old} 天)")
+                self.logger.debug(f"IP {ip} 的记录已过期 ({days_old} 天)")
                 return 0
 
-            # 1. 计算延迟得分
+            # 1. 计算延迟得分 (40%)
             latency_score = 0
             if isp in record['latency']:
                 latency = record['latency'][isp]
-                latency_score = 1000 / latency if latency > 0 else 0
+                if latency <= 200:
+                    latency_score = 100
+                elif latency <= 300:
+                    latency_score = 80
+                elif latency <= 400:
+                    latency_score = 60
+                else:
+                    latency_score = max(0, 100 - (latency - 400) / 10)
             
-            # 2. 计算HTTP性能得分
+            # 2. 计算HTTP性能得分 (40%)
             http_score = 0
             if 'http_performance' in record:
-                if isp in ['TELECOM', 'UNICOM', 'MOBILE']:
-                    # 国内线路使用阿里DNS和百度DNS的加权平均
-                    aliyun_score = self._calculate_dns_http_score(
-                        record['http_performance'], 'ALIYUN'
-                    )
-                    baidu_score = self._calculate_dns_http_score(
-                        record['http_performance'], 'BAIDU'
-                    )
-                    
-                    weights = self.http_weights['DOMESTIC']
-                    if aliyun_score > 0 and baidu_score > 0:
-                        http_score = (
-                            aliyun_score * weights['ALIYUN'] +
-                            baidu_score * weights['BAIDU']
-                        )
-                    elif aliyun_score > 0:
-                        http_score = aliyun_score
-                    elif baidu_score > 0:
-                        http_score = baidu_score
+                http_scores = []
+                for dns_type in ['ALIYUN', 'BAIDU', 'GOOGLE']:
+                    if (dns_type in record['http_performance']['ttfb'] and 
+                        dns_type in record['http_performance']['total_time']):
+                        ttfb = record['http_performance']['ttfb'][dns_type]
+                        total_time = record['http_performance']['total_time'][dns_type]
                         
-                elif isp == 'OVERSEAS':
-                    # 境外线路使用谷歌DNS
-                    http_score = self._calculate_dns_http_score(
-                        record['http_performance'], 'GOOGLE'
-                    )
-                else:  # DEFAULT
-                    # 使用所有DNS中最好的得分
-                    scores = []
-                    for dns_type in ['ALIYUN', 'BAIDU', 'GOOGLE']:
-                        score = self._calculate_dns_http_score(
-                            record['http_performance'], dns_type
-                        )
-                        if score > 0:
-                            scores.append(score)
-                    http_score = max(scores) if scores else 0
-            
-            # 3. 计算稳定性加分
-            stability_bonus = min(10, update_count * 1)
+                        if ttfb <= 0.1 and total_time <= 0.5:  # 优秀性能
+                            dns_score = 100
+                        elif ttfb <= 0.2 and total_time <= 1.0:  # 良好性能
+                            dns_score = 80
+                        else:  # 一般性能
+                            dns_score = 60
+                        http_scores.append(dns_score)
+                
+                if http_scores:
+                    http_score = sum(http_scores) / len(http_scores)
+                        
+            # 3. 计算稳定性得分 (20%)
+            stability_score = 0
+            if days_old > 7:  # 超过7天未更新的IP降低得分
+                stability_score = min(50, update_count * 2)  # 基础得分减半
+            else:
+                stability_score = min(100, update_count * 4)  # 每次更新加4分
+                
+            # 额外考虑连续可用性
+            if update_count >= 3:
+                consecutive_success = True
+                for isp_name in ['TELECOM', 'UNICOM', 'MOBILE']:
+                    if isp_name in record['latency']:
+                        if record['latency'][isp_name] > 400:
+                            consecutive_success = False
+                            break
+                
+                if consecutive_success:
+                    stability_score = min(100, stability_score + 10)
             
             # 4. 计算最终得分
             final_score = (
-                latency_score * 0.6 +   # 延迟权重提高
-                http_score * 0.3 +      # HTTP性能占比提高
-                stability_bonus * 0.1    # 稳定性保持不变
+                latency_score * 0.4 +
+                http_score * 0.4 +
+                stability_score * 0.2
             )
             
-            self.logger.info(
+            self.logger.debug(
                 f"IP {ip} {isp} 得分计算:\n"
                 f"  延迟得分: {latency_score:.2f}\n"
                 f"  HTTP得分: {http_score:.2f}\n"
-                f"  稳定性加分: {stability_bonus}\n"
+                f"  稳定性得分: {stability_score:.2f}\n"
                 f"  最终得分: {final_score:.2f}"
             )
             
@@ -362,6 +367,11 @@ class IPHistoryAnalyzer:
         try:
             timestamp = datetime.now().isoformat()
             
+            # For debug
+            self.logger.info("Debug - Example test result structure:")
+            if test_results and test_results[0]:
+                self.logger.info(json.dumps(test_results[0], indent=2))
+                
             for result in test_results:
                 if result['status'] != 'ok':
                     continue
@@ -373,7 +383,7 @@ class IPHistoryAnalyzer:
                         'http_performance': {
                             'ttfb': {},
                             'total_time': {},
-                            'dns_performance': {}  # 新增DNS性能记录
+                            'dns_performance': {}
                         },
                         'update_count': 0,
                         'last_update': timestamp
@@ -389,31 +399,53 @@ class IPHistoryAnalyzer:
                             self.history[ip]['latency'][isp] = new_latency * 0.7 + old_latency * 0.3
                         else:
                             self.history[ip]['latency'][isp] = test['latency']
-                
-                # 更新HTTP性能数据
-                if 'http_test' in result and result['http_test'].get('available', False):
-                    for dns_type, dns_result in result['http_test'].get('results', {}).items():
-                        if dns_result.get('available', False):
-                            # 更新TTFB
-                            ttfb_key = f"{dns_type}"
-                            if ttfb_key not in self.history[ip]['http_performance']['ttfb']:
-                                self.history[ip]['http_performance']['ttfb'][ttfb_key] = dns_result['ttfb']
-                            else:
-                                old_ttfb = self.history[ip]['http_performance']['ttfb'][ttfb_key]
-                                new_ttfb = dns_result['ttfb']
-                                self.history[ip]['http_performance']['ttfb'][ttfb_key] = \
-                                    new_ttfb * 0.7 + old_ttfb * 0.3
                             
-                            # 更新总时间
-                            time_key = f"{dns_type}"
-                            if time_key not in self.history[ip]['http_performance']['total_time']:
-                                self.history[ip]['http_performance']['total_time'][time_key] = \
-                                    dns_result['total_time']
-                            else:
-                                old_time = self.history[ip]['http_performance']['total_time'][time_key]
-                                new_time = dns_result['total_time']
-                                self.history[ip]['http_performance']['total_time'][time_key] = \
-                                    new_time * 0.7 + old_time * 0.3
+                # 更新HTTP性能数据
+                if result.get('http_test', {}).get('available', False):
+                    for dns_type in ['ALIYUN', 'BAIDU', 'GOOGLE']:
+                        dns_result = result['http_test'].get('results', {}).get(dns_type, {})
+                        if dns_result.get('available', False):
+                            # 记录TTFB
+                            ttfb = dns_result.get('ttfb', 0)
+                            if ttfb > 0:
+                                if dns_type not in self.history[ip]['http_performance']['ttfb']:
+                                    self.history[ip]['http_performance']['ttfb'][dns_type] = ttfb
+                                else:
+                                    old_ttfb = self.history[ip]['http_performance']['ttfb'][dns_type]
+                                    self.history[ip]['http_performance']['ttfb'][dns_type] = \
+                                        ttfb * 0.7 + old_ttfb * 0.3
+                            
+                            # 记录总时间
+                            total_time = dns_result.get('total_time', 0)
+                            if total_time > 0:
+                                if dns_type not in self.history[ip]['http_performance']['total_time']:
+                                    self.history[ip]['http_performance']['total_time'][dns_type] = total_time
+                                else:
+                                    old_time = self.history[ip]['http_performance']['total_time'][dns_type]
+                                    self.history[ip]['http_performance']['total_time'][dns_type] = \
+                                        total_time * 0.7 + old_time * 0.3
+                                        
+                            # 更新DNS性能记录
+                            if 'dns_performance' not in self.history[ip]['http_performance']:
+                                self.history[ip]['http_performance']['dns_performance'] = {}
+                                
+                            if dns_type not in self.history[ip]['http_performance']['dns_performance']:
+                                self.history[ip]['http_performance']['dns_performance'][dns_type] = {
+                                    'success_count': 0,
+                                    'total_count': 0,
+                                    'average_ttfb': 0,
+                                    'average_total_time': 0
+                                }
+                            
+                            dns_perf = self.history[ip]['http_performance']['dns_performance'][dns_type]
+                            dns_perf['success_count'] += 1
+                            dns_perf['total_count'] += 1
+                            
+                            # 更新平均值
+                            old_avg_ttfb = dns_perf['average_ttfb']
+                            old_avg_total = dns_perf['average_total_time']
+                            dns_perf['average_ttfb'] = old_avg_ttfb * 0.7 + ttfb * 0.3
+                            dns_perf['average_total_time'] = old_avg_total * 0.7 + total_time * 0.3
 
                 # 更新计数和时间戳
                 self.history[ip]['update_count'] += 1
@@ -422,7 +454,7 @@ class IPHistoryAnalyzer:
             # 保存历史记录
             with open(self.results_dir / 'ip_history.json', 'w') as f:
                 json.dump(self.history, f, indent=2)
-            
+                
         except Exception as e:
             self.logger.error(f"保存历史记录失败: {str(e)}")
 
