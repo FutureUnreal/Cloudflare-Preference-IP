@@ -11,7 +11,6 @@
 - 🌐 多维度网络质量评估
   - Ping延迟、丢包率测试
   - HTTP性能(TTFB、总加载时间)分析
-  - 多DNS服务商验证(阿里云、百度、谷歌)
   
 - 📊 智能评分系统
   - 延迟权重: 60%
@@ -38,7 +37,7 @@
    - 进入仓库的 `Settings` > `Secrets and variables` > `Actions`
    - 根据你使用的 DNS 服务商添加对应的密钥：
 ```
-# DNS服务商密钥
+# DNS服务商密钥(DNSPod、华为云暂未经过完整测试)
 ALIYUN_KEY        # 阿里云 AccessKey ID
 ALIYUN_SECRET     # 阿里云 AccessKey Secret
 DNSPOD_ID         # DNSPod Secret ID
@@ -216,7 +215,7 @@ python main.py
 
 本项目基于以下开源项目开发：
 
-- [ddgth/cf2dns](https://github.com/ddgth/cf2dns) - 提供了 Cloudflare IP 优选和 DNS 自动切换的核心思路
+- [ddgth/cf2dns](https://github.com/ddgth/cf2dns) - 提供了 DNS 自动切换的核心思路
 - [wojiaoyishang/itdog-batch-ping](https://github.com/wojiaoyishang/itdog-batch-ping) - 提供了 ITDOG 节点测速的技术实现
 
 感谢以上项目作者的开源贡献！
