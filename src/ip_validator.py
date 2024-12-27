@@ -87,7 +87,7 @@ class IPValidator:
             
             # 评估ping测试结果
             valid_ping_results = [r for r in ping_results if r and r.available and 
-                                r.latency <= self.latency_thresholds[isp]]
+                                r.latency <= self.latency_thresholds[isp] * 1.4]
             ping_success_rate = len(valid_ping_results) / len(ping_results)
             
             self.logger.info(f"Ping 验证结果: 总计 {len(ping_results)} 个节点, "
